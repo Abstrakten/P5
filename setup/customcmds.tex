@@ -1,0 +1,172 @@
+\newif \ifHASTODO
+\HASTODOfalse
+
+% Change the name of the code examples
+\renewcommand{\lstlistingname}{Code}
+
+% command: add image easily
+% \img{path}{caption}{label}
+\newcommand \img[3]{
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[width=0.8\textwidth]{#1}
+        \end{center}
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+    \FloatBarrier
+}
+
+% command: add image easily
+% \imgthatworksproperly{path}{caption}{label}
+\newcommand \imgbyalex[3]{
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics{#1}
+        \end{center}
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+    \FloatBarrier
+}
+
+% command: add image easily
+% \imgresize{path}{caption}{label}
+\newcommand \imgresize[3]{
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=0.8]{#1}
+        \end{center}
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+    \FloatBarrier
+}
+
+\newcommand \imgscale[4]{
+    \begin{figure}[H]
+        \begin{center}
+            \includegraphics[scale=#4]{#1}
+        \end{center}
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+    \FloatBarrier
+}
+
+% command: highlight text with a note
+% \hl{text}{note}
+\newcommand \hl[2]{
+    \ifDRAFT
+        \todo[linecolor=black, backgroundcolor=white, size=\large]{
+            #2
+        }
+        \textcolor{red}{
+            #1
+        }
+        
+        \edef\x{
+            \noexpand\todohelper{
+                \noexpand\textcolor{purple}{General}: #2 at
+                \noexpand\hyperref[\automlabel]{
+                    \noexpand\nameref{\automlabel}
+                }
+                (page \thepage{}, line \the\inputlineno{})
+            }
+        }
+        \x
+    \else
+    #1
+    \fi
+}
+
+% command: show todo annotations
+% \addtodo{name}{todo}
+\newcommand \addtodo[2]{
+    \ifDRAFT
+        \HASTODOtrue
+        \todo[linecolor=black, backgroundcolor=blue!30!white, size=\large]{
+            \textbf{
+                #1:
+            }
+            \\#2
+        }
+        %\fxnote{
+        %    TODO #1: #2
+        %}
+        
+        \edef\x{
+            \noexpand\todohelper{
+                \noexpand\textcolor{purple}{#1}: #2 at
+                \noexpand\hyperref[\automlabel]{
+                    \noexpand\nameref{\automlabel}
+                }
+                (page \thepage{}, line \the\inputlineno{})
+            }
+        }
+        \x
+    \fi
+}
+
+% Helper macro for \addtodo
+\newcommand \todohelper[1]{
+    \let\temp\displaytodos
+    \expandafter\def\expandafter\displaytodos\expandafter{\temp #1\\}
+}
+
+\def\displaytodos{}
+
+% command: print DRAFT label
+% \draftlabel
+\newcommand \draftlabel{
+    \begin{center}
+        \Large{
+          \textcolor{red}{
+            \textbf{
+                DRAFT
+            }
+          }
+        }
+    \end{center}
+}
+
+\newif \ifHASNOTES
+\HASNOTESfalse
+
+% command: document edited
+% editby{name}{reason}
+\newcommand \editby[2]{
+    \ifDRAFT
+        \HASNOTEStrue
+        \textcolor{blue}{
+            Edited by #1. #2.
+        }
+        
+        \edef\x{
+            \noexpand\editbyhelper{
+                \noexpand\textcolor{purple}{#1} edited \noexpand\hyperref[\automlabel]{
+                    \noexpand\nameref{\automlabel}
+                } (page \thepage{}, line \the\inputlineno{}). #2.
+            }
+        }
+        \x
+    \fi
+}
+
+\def\displayalleditnotes{}
+
+% Helper macro for \editby
+\newcommand \editbyhelper[1]{
+    \let\temp\displayalleditnotes
+    \expandafter\def\expandafter\displayalleditnotes\expandafter{\temp #1\\}
+}
+
+% Automatized labels
+\def \automlabel{ll1}
+\newcommand \createlabel{
+    \let\temp\automlabel
+    \expandafter\def\expandafter\automlabel\expandafter{\temp1}
+}
+\newcommand \eal{
+    \createlabel
+}
