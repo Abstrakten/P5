@@ -1,6 +1,8 @@
 \input{setup/preamble.tex}
 
 \begin{document}
+\pagestyle{\ifDRAFT fancy\else empty\fi} % if draft enable headers else disable
+\pagenumbering{roman}
   %\listoffixmes
   \include{sections/frontpage}
   \include{sections/colophon}
@@ -8,25 +10,44 @@
   \pdfbookmark[0]{Title Page}{label:Titlepage}
   \include{sections/titlepage}
 	\blankpage
-
+	\include{sections/preface}
   \pdfbookmark[0]{\contentsname}{label:Contents}
   \setcounter{tocdepth}{2}
 	\pagestyle{empty}
+\pagenumbering{gobble}
   \tableofcontents
+
+  
+  \cleardoublepage
+  \pagestyle{fancy}	 
+  \pagenumbering{arabic}
+
+  \input{sections/introduction}
+  
+  \input{sections/analysis/analysis-intro}
+  \input{sections/analysis/embedded}
+  \input{sections/analysis/rts}
+  \input{sections/analysis/mi}
+  
+  %
   \listoffigures
   \begingroup
   \let\clearpage\relax
   \listoftables
   \endgroup
 	\clearpage
-	\pagestyle{BasicStyle}
+	%\pagestyle{BasicStyle}
+  
 
-  \pagenumbering{arabic}
-  \include{preface}\thispagestyle{empty}
-  \blankpage
 
-  \pdfbookmark[0]{Bibliography}{label:Bibliography}
-  \printbibliography
+  \bibliography{bib/bibliography}
+  \label{bib:mybib}
+  %\pdfbookmark[0]{Bibliography}{label:Bibliography}
+  %\printbibliography
+  
+  \ifDRAFT
+    \input{sections/todonotes.tex}
+\fi
 
 
 \end{document}

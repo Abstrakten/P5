@@ -1,0 +1,37 @@
+\section{Embedded Systems}\label{sec:embeddedsystemts}\label{\automlabel}
+%Intro to embedded systems, challenges in embedded systems etc.
+A defining characteristic of embedded systems is the, often times heavily, limited hardware resources available.
+\eal
+
+\subsection{Embedded Platforms}\label{ss:embeddedplatforms}\label{\automlabel}
+%Different relevant platforms, and their advantages/disadvantages
+Several different platforms are available for use in embedded systems.
+\eal 
+
+\subsection{Sensors}\label{ss:sensors}\label{\automlabel}
+%Sensors to be used, and testing of accuracy
+The sensors that will be examined are developed by LEGO \cite{LEGO}, MindSensors \cite{MindSensors} and HiTechnic \cite{hitechnic}. The types of sensors examined are infrared and ultrasonic. There is limited documentation detailing the specifications of these sensors available. Tests will be carried out to determine the range at which the sensors work best and to estimate their levels of inaccuracy. \\\\
+\noindent
+Only relevant sensors will be examined. Given the nature of the project these sensors are the LEGO NXT Ultrasonic Sensor \cite{legoultrasonic} and the Mindsensors High Precision Infrared Distance Sensor \cite[v3, the tested one is v2]{mindinfrared}.\addtodo{Mathias}{Add other sensors}
+\eal
+
+\subsubsection{LEGO NXT Ultrasonic Sensor}\label{ss:ultrasonic}\label{\automlabel}
+The ultrasonic sensor measures distance by sending out a sound wave and then calculating the time it takes for the sound wave to hit and object and return. According to the specifications the sensor works from a distance of 0 to 250 centimeters with a precision of $\pm$ 3 centimeters \cite[p. 29]{legonxtdata}. The ultrasonic sensor does not have any range settings that can be adjusted. The specifications note that the use of multiple ultrasonic sensors may interfere with the readings. \\
+
+\noindent
+Three tests were carried out with measurements from a distance of 10 centimeters to 120 centimeters. Tests were not conducted up to the maximum range of the sensor as that is outside the intended tracking range \addtodo{Mathias}{Rephrase?}. Table \ref{ultrasonicresults} contains the average of the measurements from these tests. The ultrasonic sensor was placed on a table during the test and the target was a white wall at the end of the table. The sensor was also tested with a sponge as a target to determine it's accuracy when aimed at soft targets. This resulted in very high distance readings as the target was not able to reflect the sound properly. The results from this test are not included in the report.
+
+\input{sections/tables/ultrasonictestresults.tex}
+\noindent
+In all three tests only two distances provided inaccurate results, 10 centimeters and 110 centimeters respectively. The difference between actual distance and measured distance at 10 centimeters is rather significant given the small distance. However, the difference can be neglected as it is unlikely that it will be necessary to track targets at such a short range. At 110 centimeters the difference of 1 centimeter makes no notable difference considering the size of the intended target.  
+\eal
+
+\subsubsection{Mindsensors High Precision Infrared Distance Sensor}\label{ss:minddist}\label{\automlabel}
+The infrared (IR) distance sensor from mindsensors measures distance based on the angle of the arriving reflected IR light it emits \cite{minddata}. The sensor exists in three versions, one for short range, one for medium range and one for long range. The sensor being tested supports all three ranges and the desired measuring range can be changed through the file being uploaded to the NXT. The sensor does not work on objects that do not reflect IR light. Table \ref{mindsensorranges} shows the distances supported by the three range settings. The IR sensor measures distance in millimeters. 
+
+\input{sections/tables/mindsensorranges.tex}
+\noindent
+
+\eal
+
+

@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt,english,twoside]{report}
+\documentclass[a4paper,14pt,twoside,a4paper,openright, fleqn]{report}
 
 %%%% PACKAGES %%%%
 
@@ -768,6 +768,7 @@ rsp, si, sil, sp, spl
 \usepackage{color}
 \usepackage{booktabs}
 \usepackage{xcolor}
+\definecolor{aaublue}{RGB}{33,26,82}% dark blue
 \usepackage{float}
 \usepackage[font=it,labelfont=bf]{caption}
 \DeclareCaptionFont{white}{\color{white}}
@@ -775,23 +776,48 @@ rsp, si, sil, sp, spl
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 
 \usepackage{subfig} % support for sidebyside figures
+\usepackage{tabularx}
+\usepackage{tabulary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperlinks
+% http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable hyperlinks and insert info into the pdf
+% file. Hypperref should be loaded as one of the 
+% last packages
+\usepackage{hyperref}
+\hypersetup{%
+	pdfpagelabels=true,%
+	plainpages=false,%
+	pdfauthor={Author(s)},%
+	pdftitle={Title},%
+	pdfsubject={Subject},%
+	bookmarksnumbered=true,%
+	colorlinks,%
+	citecolor=aaublue,%
+	filecolor=aaublue,%
+	linkcolor=aaublue,% you should probably change this to black before printing
+	urlcolor=aaublue,%
+	pdfstartview=FitH%
+}
 
-\usepackage[mode=multiuser,draft]{fixme} % fixme config
-\FXRegisterAuthor{si}{asi}{Simon}
-\FXRegisterAuthor{ka}{aka}{Kasper}
-\FXRegisterAuthor{ta}{ata}{Terndrup}
-\FXRegisterAuthor{al}{aal}{Alexander}
-\FXRegisterAuthor{ch}{ach}{Christian}
-\FXRegisterAuthor{je}{aje}{Jens}
 
-\usepackage[ % citation support
-bibencoding=utf8,
-  hyperref=true,
-  backend=biber,
-  style=ieee,
-  sorting=none
-  ]{biblatex}
-  \addbibresource{sources.bib}
+%\usepackage[mode=multiuser,draft]{fixme} % fixme config
+%\FXRegisterAuthor{ma}{ama}{Mathias}
+%\FXRegisterAuthor{jo}{ajo}{Alex}
+%\FXRegisterAuthor{ta}{ata}{Terndrup}
+%\FXRegisterAuthor{al}{aal}{Alexander}
+%\FXRegisterAuthor{la}{ala}{Lasse}
+%\FXRegisterAuthor{ke}{ake}{Kenneth}
+
+%\usepackage[ % citation support
+%bibencoding=utf8,
+ % hyperref=true,
+  %backend=biber,
+  %style=ieee,
+  %sorting=none
+  %]{biblatex}
+  %\addbibresource{sources.bib}
 
 \usepackage{csquotes} % recommended by biblatex
 \usepackage{lastpage}
@@ -800,7 +826,12 @@ bibencoding=utf8,
 
 % http://tex.stackexchange.com/questions/42063/illogical-twoside-margins
 % layout page auto-centering horizontally and allow for press binding
-\usepackage[hcentering,bindingoffset=8mm]{geometry}
+%\usepackage[hcentering,bindingoffset=8mm]{geometry}
+% Change margins, papersize, etc of the document
+\usepackage[
+  left=28mm,% left margin on an odd page
+  right=41mm,% right margin on an odd page
+  ]{geometry}
 
 \usepackage{hyperref} % hyperlinks in pdf
 \usepackage{cleveref} % clever references. Use with \cref...
@@ -822,13 +853,28 @@ bibencoding=utf8,
 \newcommand{\parttitle}{}
 \renewcommand{\part}[1]{\Oldpart{#1}\renewcommand{\parttitle}{#1}}
 
-\usepackage{fancyhdr}
-\usepackage{nopageno}
-\setlength{\headheight}{52pt}
+%\usepackage{fancyhdr}
+%\usepackage{nopageno}
+%\setlength{\headheight}{52pt}
 
-\fancypagestyle{fancyplain}{} % no ordinary headers and footers in pages with chapters
-\fancyhead{} % clear default header
-\fancyfoot{} % clear default footer
+%\fancypagestyle{fancyplain}{} % no ordinary headers and footers in pages with chapters
+%\fancyhead{} % clear default header
+%\fancyfoot{} % clear default footer
+
+% Change the headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} %delete everything
+\renewcommand{\headrulewidth}{0pt} %remove the horizontal line in the header
+\fancyhead[RE]{\color{aaublue}\small\nouppercase\leftmark} %even page - chapter title
+\fancyhead[LO]{\color{aaublue}\small\nouppercase\rightmark} %uneven page - section title
+\fancyhead[LE,RO]{\thepage} %page number on all pages
+% Do not stretch the content of a page. Instead,
+% insert white space at the bottom of the page
+\raggedbottom
+% Enable arithmetics with length. Useful when
+% typesetting the layout.
+\usepackage{calc}
 
 \renewcommand{\chaptermark}[1]{\markboth{\thechapter.\space#1}{}} % do not print "chapter"
 
@@ -967,3 +1013,90 @@ bibencoding=utf8,
 
 % Stop repositioning of figures
 \usepackage{placeins}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+% http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add the \citep{key} command which display a
+% reference as [author, year]
+%\usepackage[square]{natbib}
+% Appearance of the bibliography
+\bibliographystyle{unsrt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Misc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add bibliography and index to the table of
+% contents
+\usepackage{verbatim}
+\usepackage[nottoc]{tocbibind}
+\usepackage{lastpage}% Add the command \pageref{LastPage} which refers to the
+% page number of the last page
+\usepackage[
+%  disable, %turn off todonotes
+  colorinlistoftodos, %enable a coloured square in the list of todos
+  textwidth=\marginparwidth, %set the width of the todonotes
+  textsize=scriptsize, %size of the text in the todonotes
+  ]{todonotes}
+\usepackage{lipsum} %dummy text
+\usepackage{listings} %Code formatting package
+\definecolor{lightgray}{RGB}{220,220,220}
+
+\lstset{ %
+  backgroundcolor=\color{lightgray},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{codeGreen},  % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=false,             % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=[Sharp]C,                 	   % the language of the code
+  morekeywords={DataViewBinder, DataNotifications},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{black},% the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{codeMauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  frameround=ffff,
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+% Use this conditional to set whether the build is a draft (\DRAFTtrue) or a final (\DRAFTfalse)
+% Everything is handled automatically in accordance with this
+% Use false for supervisor versions and final version
+\newif \ifDRAFT
+\DRAFTtrue
+
+% Include hyphenations
+%\input{setup/hyphenations.tex}
+% Include custom commands
+\input{setup/customcmds.tex}
+% Include phrases
+%\input{setup/phrases.tex}
+
+% Include DRAFT headers if the document is a draft
+\ifDRAFT
+    \usepackage{fancyhdr}
+    \fancyhf{}
+    \fancyhead[C]{\draftlabel}
+\fi
+
+% Kommentarer og rettelser med \fxnote. Med 'final' i stedet for 'draft' udloeser hver note en error i den faerdige rapport.
+\usepackage[footnote,\ifDRAFT draft\else final\fi,english,silent,nomargin]{fixme}
+
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+\usepackage{stmaryrd}
