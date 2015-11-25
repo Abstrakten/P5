@@ -1,0 +1,71 @@
+\section{Platform}\label{sec:platform}\label{\automlabel}
+
+%%% Motivation for analyzing platforms, and criteria for evaluation
+The turret can be developed with one of several different platforms acting as the base. Aalborg university provides three primary choices for platform, namely Arduino Uno, Lego Mindstorms NXT, and Raspberry Pi. The specifactions of these platforms is shown in table~\ref{tab:hardware_specs}.
+
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+	\begin{tabular}{|l|l|l|l|}
+	\hline
+	\textbf{Platform}        & \textbf{Arduino Uno~\cite{arduino_uno}}	& \textbf{Lego Mindstorms NXT} 	& \textbf{Raspberry Pi 1 model A} \\ \hline
+	\textbf{CPU clock speed} & 16 MHz					& 48 MHz						& 700 MHz                         \\ \hline
+	\textbf{Flash memory}    & 32 KB 					& 256 KB 						& SD card support                 \\ \hline
+	\textbf{RAM}             & 2 KB SRAM 				& 64 KB RAM 					& 256 MB SDRAM                    \\ \hline
+	\textbf{Ports}           & \begin{tabular}[c]{@{}l@{}}14 digital I/O pins \\ 6 analog input pins \end{tabular} 
+							 & \begin{tabular}[c]{@{}l@{}}4 input ports \\ 3 output ports 			 \end{tabular}
+							 & 8 I/O ports                     															  \\ \hline
+	\textbf{Other}           & N/A 						
+	 						 & \begin{tabular}[c]{@{}l@{}}Separate microcontroller for I/O \\ Bluetooth support \end{tabular} 
+	 						 & 250 MHz GPU                     															  \\ \hline
+	\end{tabular}
+}
+\caption{Hardware specifications for available platforms.}
+\label{tab:hardware_specs}
+\end{table}
+
+
+
+
+\subsection{Raspberry Pi}\label{raspberry}
+The Raspberry Pi is a small single-board computer. The hardware specifications of the Raspberry Pi 1 model A are as follows:
+
+\begin{itemize}
+  \item ARM1176JZF-S CPU with a 700 MHz clock speed.
+  \item Broadcom VideoCore IV GPU with a 250 MHz clock speed.
+  \item 256 MB SDRAM
+  \item 8 general purpose I/O ports (17 GPIO ports on the A+ model).
+\end{itemize}
+
+Though the physical measurements of the unit are small, the Raspberry Pi is still a rather powerful board. For the purpose of the embedded system in this project, this amount of computational power is not needed. Additionally, hardware modifications are needed for incorporating the board with the available sensors and actuators. 
+
+\subsection{Arduino Uno}\label{arduino}
+The Arduino Uno is a microcontroller board. It is a popular choice for use in embedded systems, primarily due to its low cost and easy accessibility as well as the amount of accessories available for the device. The Arduino Uno hardware has the following specifications:
+
+\begin{itemize}
+  \item ATmega328P microcontroller with 16 MHz clock speed.
+  \item 32 KB flash memory.
+  \item 2 KB SRAM.
+  \item 14 digital I/O pins.
+  \item 6 analog input pins.
+\end{itemize}
+
+While the hardware resources on this platform are heavily limited, it should be capable of performing the necessary calculations, otherwise these can be offloaded to another system. A rather important disadvantage of using Arduino Uno is the fact that sensors and actuators have to be built and/or modified to be able to function properly with the device. 
+
+\subsection{Lego NXT}\label{legonxt}
+Another available platform is the LEGO NXT. This platform is considered a good option due to the large selection of available sensors and actuators compatible with the platform, and the "plug and play" nature of the platform. The hardware in the NXT is as follows:
+
+\begin{itemize}
+  \item 32-bit ARM7TDMI core.
+  \item 256KB of FLASH memory.
+  \item 64KB of RAM.
+  \item 8-bit Atmel ATmega48 microcontroller.
+  \item Bluetooth support.
+  \item 3 output ports.
+  \item 4 input ports.
+\end{itemize}
+
+The LEGO NXT allows compatible sensors and actuators to be connected by the means of a cable which moves the focus to the software aspect as there is no need to modify the hardware.
+
+\subsection{Platform Selection}
+The Raspberry Pi is too powerful a board for this project and will not be selected. The Arduino Uno could be used for the project, however, it has not been selected as it would shift the focus towards the hardware due to the fact that a lot of the hardware for the Arduino Uno needs to be assembled beforehand. The LEGO NXT complies with the requirements for this project. It is more powerful than the Arduino Uno while the Raspberry Pi is stronger. The LEGO NXT is naturally compatible with LEGO parts making it easy to construct turrets that can house the platform. This would also make it easier to construct different turret types in the future. 

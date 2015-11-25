@@ -1,0 +1,21 @@
+\section{The Turret}\label{turret}
+The turret is purpose-built using LEGO bricks following a custom design made by the project group. The turret consists of three main parts: the cannon, the tracking system and the rotation system. A total of 3 motors are mounted on the turret to aid the cannon and the rotation system. The tracking system is made up of two sensors mounted on the turret aimed in the same direction as the cannon. The turret with infrared sensors and motors mounted can be seen in \cref{turret1}. \\
+
+\imgscale{figures/turret.png}{The turret with infrared sensors mounted}{turret1}{0.2}
+
+The turret uses LEGO bricks as projectiles. These projectiles are fired by releasing a piston bolt from a retracted position. The bolt is pulled into a barrel by stretching elastic bands and when released it is pushed out of the barrel and into the projectile propelling it towards the target. The elastic bands are stretched using motor driven rotating rods which pass by at the apex of the stretch, releasing the bolt and allowing the elastic bands to contract. This allows for automatic fire of projectiles by continiously rotating the rods, however, it also makes priming the cannon in a cocked position somewhat difficult. The turret is loaded when the bolt is retracted as this allows a LEGO brick to drop down into the chamber just prior to the release of the bolt. The turret can hold a magazine with a capacity of 10 projectiles. The turret also allows for sensors to be mounted in various positions.
+
+\paragraph{Projectile Accuracy} ~\\
+The accuracy of the fired projectiles was tested by placing the turret 75 centimeters away from a circular target with a diameter of 5 centimeters. At this distance a projectile drop off of 10 centimeters was recorded. A total of 10 projectiles were fired and all of them managed to hit the target. The hits were not centered in one location, but spread about the target within the 5 centimeter boundary. The projectiles had some difficulty penetrating the target, a sheet of paper, at the tested distance. This can be attributed to the shape of the projectiles as well as the loss of velocity at the tested distance.
+
+\paragraph{Motor and Sensor Selection} ~\\
+Based on the motor test, see \cref{sec:actuators} and the sensor test, see \cref{sec:sensors}, the most suitable components were selected for the turret. According to the motor test the motors \textit{D} and \textit{G} are the best with the remaining motors being nearly equal in performance - with the exception of \textit{E} and \textit{C}. Motor \textit{D} has been selected as the rotation motor due to its performance, the early rotation starting point being important. Motors \textit{G} and \textit{B} have been selected for the cannon. The cannon only requires motors with similar performance from above 60\% power. \\
+
+The turret requires sensors with a high level of accuracy. The sensors are essential in detecting the moving target and they are also used to determine the position of the target. If the two sensors interfere with each other the measurements may be incorrect resulting in the system incorrectly believing that it is tracking the target or making it unable to track the target properly. As such it is necessary to use sensors that do not interfere with each other in a manner that disrupts the readings to such an extent that the system is unable to properly track the target. As the interference between the ultrasonic sensors is too great and causes incorrect readings, these sensors have not been selected for the turret. The infrared sensors have very limited interference and they have accurate readings. Following the tests, see \cref{sec:sensors}, of both sensor types, ultrasonic and infrared, it has been determined that the infrared sensors are the most accurate \addtodo{Mathias}{Maybe - fix after sensor test} with the least amount of interference. Due to this they have been selected as the sensors of choice for the turret. 
+
+
+
+
+
+
+

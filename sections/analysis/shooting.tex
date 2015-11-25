@@ -1,0 +1,47 @@
+\section{Shooting a Target}\label{sec:shooting}\label{\automlabel}
+For this project, the shooting part will be the launch of a Lego projectile, since it fits the scope of the project and sufficiently illustrates common problems with reactions. The turret which fires the projectile is described later in the report, in \cref{turret}.
+
+Certain factors have to be considered when firing projectiles at any given target. The most important factors are the velocity of both the target, and of the projectile, as well as the distance to the target, the accuracy of the projectiles and the turrets rate of fire. Another important factor is the predictability of the target, mostly in regards to the path which target will take. However, since this projects delimits itself to a tower defense scenario, a predictable path is assumed.
+
+The projectile velocity, accuracy and rate of fire is covered in the testing of the constructed turret, see \cref{turret}, but some deductions can be made on the other factors alone.
+
+\subsection{Field of view}\label{FoW}
+As the target enters the field of view, the shooting system has a limited time to respond, which depends on how fast the target is moving. A faster target will leave the field of view quicker, providing a shorter time frame for the projectile to hit the target. In this regard a faster target can therefore be interpreted as a smaller target. If we assume a degree of freedom in the distance from the target, we can increase the time a target spends in the field of view at the cost of increasing the travel time of the projectile to the target.\\
+
+The distance from a tower to a given target inside its observable area, is not likely to be constant. In fact this is only the case when the target follows a path which curves in parallel to the tower. Assuming a straight path parallel to a tangent of the towers field of view, the distance to the target will increase exponentially in relation to the distance between the target and the tangents point of contact. This fact, in relation to velocity of the projectile, limits the maximum distance to the target, and such the effective observable area. \addtodo{Kasper}{Lidt fovirrende, overvej grafik}
+
+The limit on the time a target spends in the effective range of a tower, also adds a requirement of time to the task of acquiring a target and releasing a projectile. If targets require multiple hits before being eliminated, which is the case in classical tower defense games, this will further increase the emphasis on time, since the faster the first projectile is fired, the sooner it will eliminate a target. However, for the purpose of a game, this could be considered a part of the challenge of managing your tower resources. So a tower should not nessesarily have the faster possible reaction, but rather a consistent one. 
+
+\subsection{Trajectory Prediction}\label{sec:motionprediction}\label{\automlabel}
+When firing projectiles one must consider the correlation between the ratio of the projectile speed to the distance to the target, and the time it takes for the target to travel its own length. If for example the distance is 1 meter, and the projectile velocity is 1 meter per second, a target that moves faster than its own length in a second will not be hit by a projectile launched directly at the target. If we assume a passing target to move at a pace sufficiently high, that the turret can not successfully hit the target by firing immediately upon detection, it becomes necessary to be able to predict the movement of the target, and fire the projectile a distance in front of target.\\
+
+In summation, the process of firing a projectile is a time sensitive task, in regards to both how long the target is in the effective range of the turret, how fast a projectile can be released, and how fast a prediction of the trajectory must be made.
+
+
+
+
+
+%A possible solution for this is measuring the speed and direction of the target, and the distance from the turret to the target, at one fixed point. Based on these measurements the turret should calculate how far the target will travel in a given time frame, and then adjust its aim according to this calculation. As this method bases the calculations on a single measurement, it has certain limitations. It is not able to account for change in the targets speed or direction after the measuring point. In order to circumvent these limitations, another method for measuring characteristics of the target is necessary.
+
+%As the limitations stem from basing the calculations on a single measuring point, other measuring points could be added. As the turret does not know the path of the track beforehand, there is a possibility of the track turning out of the turrets range between measuring points. In order to avoid this, the measuring points can not be too far from each other. A large number of measuring points will increase the precision of the prediction of the targets movement. One possible method to increase the amount of measuring points, is to let the turret continuously track its target, while also measuring the distance.
+
+
+%This distance depends on several different factors, including the objects speed, the distance from the cannon to the object, and the direction in which the object is moving. In order to calculate this distance, SOMESTUFF will be used.
+%\addtodo{Lasse}{What stuff?}
+%\addtodo{Lasse}{The angle the cannon has to turn depends on both the calculated distance, and the path of the track.} 
+%\eal
+
+%\subsection{SOMESTUFF}
+
+
+
+%Below are some examples, that illustrate some of the problems that need to be considered. \\
+
+%\textbf{Example 1} \\
+%The turret is placed at a specific distance from the path of the moving target. The faster the target moves the faster it will go past the tracking system. If the turret is moved close to the path of the target the field of view of the tracking system will decrease. This results in a shorter time span in which it's possible to hit the target with a projectile.  \\\\
+
+%\textbf{Example 2} \\
+%The target is moving at the same speed at all times and its size does not change. The turret is moved in a straight line towards and away from the path of the target. The farther away the turret is moved, the more important the speed and drop of the projectile becomes. At long ranges the projectile might become inaccurate, partly because the travel time increases. \\\\
+
+%\textbf{Example 3} \\
+%The turret is placed at a specific distance from the path of the target. The speed of the target can change at any time. If the turret is placed far away from the path of the target the projectile will have a long travel time. If the speed of the target changes at the moment the projectile is fired, the prediction of the target's location may no longer be accurate which can result in the projectile missing the target.

@@ -1,0 +1,47 @@
+\section{PID}
+
+\begin{lstlisting}[language=C, label={PID}, caption={PID code}]
+S32 PID(S32 target, S32 current, S32 *integrale, S32 *lastError)
+{
+	S32 error = target - current;
+	S32 derivative = error - *lastError;
+	*integrale = *integrale + error;
+	double speed = error * Kp + Ki*(*integrale) + Kd*derivative;
+	*lastError = error;
+
+	return (speed > 0) ?
+        (S32)(speed + MotorStartPower) :
+        (speed < 0) ?
+           (S32)(speed - MotorStartPower) :
+            (S32)speed;
+}
+\end{lstlisting}
+\Cref{PID} is the main PID function it takes 4 variabels as input, the first two is the target position and the current position, the next two is the integrale and the last error, these are both variables used to hold data from the last run of the PID, they are not stored in the function becasue that would course problem with the PID running multiple motors. The PID use four defines that is located in the PID.h file these are $K_p$, $K_i$, $K_d$ and MotorStartPower, the first three are coefficients for the PID explained in \cref{hardware:PID}, and MotorStartPower is the power that is need for the motor to start. A S32 were chosen to represent as it allowed for around 6 million rotations, there were chosen a double for the calculation as the coefficients are small and the result is not aways bigger than 1, this will lead to rounding error if a integer were used.
+
+
+\begin{lstlisting}[language=C, label={PIDwrapper}, caption={PID wrapper}]
+S32 MotorPID(S32 target, U8 motor)
+{
+    static S32 integrale[] = {0, 0, 0, 0};
+    static S32 lastError[] = {0, 0, 0, 0};
+
+	register S32 current = nxt_motor_get_count(motor);
+	register S32 getSpeed = PID(target, current, &integrale[motor], &lastError[motor]);
+	nxt_motor_set_speed(motor, getSpeed, 0);
+	return getSpeed;
+}
+\end{lstlisting}
+
+\Cref{PIDwrapper} is the function that is called if one wants to use the PID it takes 2 variables the first is the target position, the second is the motor number this is specific to the nxt as the port signature is a U8. The two arrays hold the integral and last error that is used by the PID function, as the nxt got four output ports the length of the array is four, the port signature is translated to integers in the zero to three. The wrapper then get the current position of the motor, then call the PID, and lastly it set the motor to the PID speed and return it.
+
+\begin{lstlisting}[language=C, label={PID.h}, caption={PID.h}]
+#define Kp 0.075            // Kp
+#define Kd 0.0375           // Kd
+#define Ki 0.0000000075     // Ki
+#define MotorStartPower 80
+
+extern S32 PID(S32, S32, S32*, S32*);
+extern S32 MotorPID(S32, U8);
+\end{lstlisting}
+
+$K_p$, $K_i$ and $K_d$ were found using the Ziegler–Nichols method and then tuned manually. $K_i$ is much smaller than the other two because the I value in the PID is the sum of all the errors that the system has seen, and with a sample rate of 20ms it will sum up fast. MotorStartPower is the minimum power that is required for the motors to start.

@@ -1,4 +1,5 @@
 \documentclass[a4paper,14pt,twoside,a4paper,openright, fleqn]{report}
+\usepackage{etex}
 
 %%%% PACKAGES %%%%
 
@@ -23,6 +24,9 @@
 \usepackage[inference]{semantic}
 \usepackage{braket}
 \usepackage{array}
+\usepackage{csvsimple}
+\usepackage{pgfplots}
+
 \usepackage[nounderscore]{syntax}
 \setlength{\grammarindent}{100pt}
 
@@ -1043,6 +1047,7 @@ rsp, si, sil, sp, spl
 \usepackage{lipsum} %dummy text
 \usepackage{listings} %Code formatting package
 \definecolor{lightgray}{RGB}{220,220,220}
+\definecolor{codeGreen}{rgb}{0,0.6,0}
 
 \lstset{ %
   backgroundcolor=\color{lightgray},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
@@ -1057,8 +1062,8 @@ rsp, si, sil, sp, spl
   frame=single,                    % adds a frame around the code
   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
-  language=[Sharp]C,                 	   % the language of the code
-  morekeywords={DataViewBinder, DataNotifications},            % if you want to add more keywords to the set
+  language=C,                 	   % the language of the code
+  morekeywords={},            % if you want to add more keywords to the set
   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
   numberstyle=\tiny\color{black},% the style that is used for the line-numbers
@@ -1072,6 +1077,11 @@ rsp, si, sil, sp, spl
   frameround=ffff,
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
+
+\crefname{listing}{code}{code}
+\Crefname{listing}{Code}{Code}
+
+\usetikzlibrary{shapes,arrows}
 
 
 % Use this conditional to set whether the build is a draft (\DRAFTtrue) or a final (\DRAFTfalse)
@@ -1100,3 +1110,13 @@ rsp, si, sil, sp, spl
 \usepackage{ragged2e}
 \usepackage{pdfpages}
 \usepackage{stmaryrd}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+
+\titleformat{\paragraph}
+  {\normalfont\scshape}{\theparagraph}{.1em}{}
+  
+\titlespacing*{\paragraph} {0pt}{3.25ex plus 1ex minus 1.5ex}{-1em}
+

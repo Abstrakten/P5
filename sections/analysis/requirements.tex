@@ -1,0 +1,33 @@
+\section{Requirements}\label{sec:requirements}
+In light of the analysis, the following requirements for a turret in a tower defense game have been deduced. 
+
+\begin{enumerate}
+    \item A turret must be able to detect a target.
+    \begin{enumerate}
+        \item\label{list:vis} Detection must be done visually or by motion detection
+        \item The turret must either constantly monitor the entire observable area, cover key points, or search the observable area.
+    \end{enumerate}
+    
+    \item A turret must be able to detect and analyze movement, and react accordingly.
+    \begin{enumerate}
+        \item Detection, analysis and reaction must be done faster than the movements of the target.
+    \end{enumerate}
+    
+    \item A turret must be able to predict the trajectory required to hit a target.
+    \begin{enumerate}
+        \item Prediction of trajectory, aiming and shooting a target must be done within a limited time frame.
+    \end{enumerate}
+\end{enumerate}
+
+These requirements are considered the needs for any turret included in a final game. The lack of specific requirements reflect the fact that a key point of the game is to have different turrets, some which might have to shoot faster than a specific speed, and some which might require the ability to identify different targets. This list of requirements reflects the most basic type of turret. A solution to the initial problem does not necessarily have to involve all of these requirements, since some of the requirements are the byproduct of delimitations made in this project, such as requirement \ref{list:vis}. \\
+
+These requirements can be summarized into the question: \\
+
+\textit{How does one implement a program on an embedded system, such that the system can detect, track, and react to objects passing by?}\\
+
+This question, along with the requirements, will be the background for the design and implementation chapters.
+
+%A requirement might not be necessary for any solution to the initial problem, but be a byproduct of delimitations made in this project, such as requirement \ref{list:vis}.\\
+%being a a byproduct of our delimitation that a target can only be guaranteed to be detected through these methods. If the delimitation had included that a target would emit a signal, detection could have been done on that signal as well.  % Sidste sætning er forvirrende
+
+

@@ -1,0 +1,18 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[title=Stationary mode - 2 ultrasonic sensors, xlabel=Time in ms, ylabel=Distance in cm / Rev in degrees (motor), legend cell align=left,  ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, xmin=0]
+    \addplot[blue,line width=1pt] 
+         table [x=a, y=c, col sep=comma] {sections/data/data-2stationary.csv};
+         \addlegendentry{Sensor 1}
+    \addplot[green,line width=1pt] 
+         table [x=a, y=d, col sep=comma] {sections/data/data-2stationary.csv};
+         \addlegendentry{Sensor 2}
+    \addplot[red,line width=1pt] 
+         table [x=a, y=b, col sep=comma] {sections/data/data-2stationary.csv};
+         \addlegendentry{Motor}
+\end{axis}
+\end{tikzpicture}
+\caption{Test with 2 ultrasonic sensors in stationary mode}\label{2sensorstat}
+\end{figure}
+\FloatBarrier

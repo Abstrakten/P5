@@ -16,19 +16,24 @@
 	\pagestyle{empty}
 \pagenumbering{gobble}
   \tableofcontents
-
   
   \cleardoublepage
   \pagestyle{fancy}	 
   \pagenumbering{arabic}
-
-  \input{sections/introduction}
-  
-  \input{sections/analysis/analysis-intro}
-  \input{sections/analysis/embedded}
-  \input{sections/analysis/rts}
-  \input{sections/analysis/mi}
-  
+  \setlength{\parindent}{0pt}
+  % REPORT STRUCTURE
+  \input{sections/introduction/introduction.tex}
+  \input{sections/analysis/intro.tex}
+  \input{sections/analysis/requirements.tex}
+  \input{sections/preliminarydesign/intro.tex}
+  \input{sections/hardware/intro.tex}
+  \input{sections/design/intro.tex}
+  \input{sections/implementation/intro.tex}
+  \input{sections/test/intro.tex}
+  \input{sections/evaluation/intro.tex}
+    \ifDRAFT
+    \input{sections/todonotes.tex}
+    \fi
   %
   \listoffigures
   \begingroup
@@ -45,9 +50,7 @@
   %\pdfbookmark[0]{Bibliography}{label:Bibliography}
   %\printbibliography
   
-  \ifDRAFT
-    \input{sections/todonotes.tex}
-\fi
-
+  \appendix
+  \input{sections/appendix/intro.tex}
 
 \end{document}

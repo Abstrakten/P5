@@ -1,0 +1,27 @@
+\section{Detection Design}
+When designing a method for detecting a target, the properties of the target defines how it will be detected. A target will always be:
+
+\begin{enumerate}
+\item Moving along a track inside an area covered by sensors.
+\item Visually distinguishable from non-targets.
+\end{enumerate}
+
+These properties allow for two ways of detection: image recognition and motion-detection.
+
+\subsection{Image Recognition}
+Image recognition as a detection method involves analyzing a picture of the area covered by a camera in order to determine whether a target is present. There are two ways to do it: either the analysis looks for anomalies in the picture, or it looks for something that matches a preconceived signature of a target. \\
+
+The first method compares any picture to a baseline, and reacts to changes. This requires a baseline to be established, which can prove to be quite complicated. If a static baseline is assumed, changes in light and shadows can potentially affect the analysis, resulting in false positives. Any instability in the camera mount can also result in the same problem. This could possibly be resolved through filters and margin tolerance. Another method is to have a more fluid baseline which continuously alters the baseline in accordance with new information. A fluid system would regulate the baseline such that small changes would not register as an anomaly, and only major disruptions from the baseline would. This would warrant a system that intelligently analyses the input. The idea of a baseline also requires the picture to be taken from a stationary position, or employ an elaborate system to map the 2-dimensional pictures onto a 3rd dimension. \\
+
+The second technique involves trying to match a preconceived signature to the picture. If the system is set up to recognize the shape of a square, the analysis will ignore everything that does not have a square shape. This would also allow for registration of multiple types of targets. This technique also avoids the problem of the stationary camera and the baseline, but it is still vulnerable to image distortion and false positives. This could happen if squares seen from an angle are not registered or if something which is not a target happens to have a square on it.
+
+
+\subsection{Motion Detection}
+There are multiple ways of employing motion detection, however, the properties of the targets limit the sensor types to optical (which was covered as image recognition), ultrasonic and infrared. \\
+
+No matter what technique is used, the methods are similar. One method is to establish a baseline, in the same fashion as image recognition. However, this baseline can be much simpler than the one used for image recognition. One example of a simpler baseline could be: "any object closer than 50 centimeters is considered a target". Once again a baseline could also be fluid, allowing for small changes while still detecting rapid changes. This could be useful in the case of a backdrop which curves or if the sensor is not always perpendicular to the backdrop. It is also possible to map the entire area, and register anomalies, with the same benefits and difficulties as with image recognition. \\
+
+Using motion detection sensors do, however, require less computational power to analyze the data, in a trade-off with a limited perception of the actual composition of the area. \\
+
+In summation, detection can be done with both image recognition and motion detection, but with image recognition being a more perceptive technique and motion detection being a cheaper technique in terms of required computational power.
+

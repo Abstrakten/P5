@@ -1,0 +1,36 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[title=Motor Performance Test, xlabel=Power level \%, ylabel=RPM, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, legend pos=north west, legend cell align=left, xmin=10, ymin=0]
+    \addplot[yellow,line width=1pt] 
+         table [x=a, y=b, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor A}
+    \addplot[red,line width=1pt] 
+         table [x=a, y=c, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor B}
+    \addplot[blue,line width=1pt] 
+         table [x=a, y=d, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor C}
+    \addplot[purple,line width=1pt] 
+         table [x=a, y=e, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor D}
+    \addplot[orange,line width=1pt] 
+         table [x=a, y=f, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor E}
+    \addplot[green,line width=1pt] 
+         table [x=a, y=g, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor F}
+    \addplot[black,line width=1pt] 
+         table [x=a, y=h, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor G}
+    \addplot[teal,line width=1pt] 
+         table [x=a, y=i, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor H}
+    \addplot[lime,line width=1pt] 
+         table [x=a, y=j, col sep=comma] {sections/data/MotorData.csv};
+         \addlegendentry{Motor I}
+\end{axis}
+\end{tikzpicture}
+\caption{Motor test}\label{motordata}
+\end{figure}
+\FloatBarrier
