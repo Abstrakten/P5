@@ -1,7 +1,8 @@
-\documentclass[a4paper,14pt,twoside,a4paper,openright, fleqn]{report}
+\documentclass[a4paper,11pt,twoside,a4paper,openright, fleqn]{report}
 \usepackage{etex}
 
 %%%% PACKAGES %%%%
+
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} % encoding=utf8
@@ -26,14 +27,54 @@
 \usepackage{array}
 \usepackage{csvsimple}
 \usepackage{pgfplots}
+\usepackage{svg}
+\usepackage[figuresright]{rotating}
+\usepackage{emptypage}
+\usepackage{afterpage}
 
 \usepackage[nounderscore]{syntax}
 \setlength{\grammarindent}{100pt}
+
+\definecolor{custom1}{RGB}{180,0,0}
 
 %%%%%%%flotte listings
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=single,
+  xleftmargin=\parindent,
+  language=C,
+  keywords=[1]{double, long, int, uint, float, char, short},
+  keywords=[2]{U32, U8, S8, S32},
+  keywords=[3]{static, void, return, break},
+  keywords=[4]{for, if, while, do, else},
+  keywords=[5]{nxt_motor_get_count, ecrobot_send_i2c, ecrobot_read_i2c, PID, MotorPID, nxt_motor_set_speed, TerminateTask, cock, fire, motor_in_range, systick_wait_ms, resetTowerTo, reset, kalman, matrixMultiply, matrixCopy, matrixScale, matrixAdd, matrixSubtract, TASK},
+  keywordstyle=[1]\color{green!40!black},
+  keywordstyle=[2]\color{green!40!black},
+  keywordstyle=[3]\color{cyan},
+  keywordstyle=[4]\color{orange!70!black},
+  keywordstyle=[5]\color{custom1},
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+\lstdefinestyle{customasm}{
+  belowcaptionskip=1\baselineskip,
+  frame=L,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{purple!40!black},
+}
+
+\lstset{escapechar=@,style=customc}
 
 \lstdefinelanguage{scala}{
   morekeywords={abstract,case,catch,class,def,%
@@ -789,6 +830,7 @@ rsp, si, sil, sp, spl
 % Enable hyperlinks and insert info into the pdf
 % file. Hypperref should be loaded as one of the 
 % last packages
+\usepackage[hyphens]{url}
 \usepackage{hyperref}
 \hypersetup{%
 	pdfpagelabels=true,%
@@ -828,21 +870,22 @@ rsp, si, sil, sp, spl
 
 \sloppy
 
+
 % http://tex.stackexchange.com/questions/42063/illogical-twoside-margins
 % layout page auto-centering horizontally and allow for press binding
-%\usepackage[hcentering,bindingoffset=8mm]{geometry}
+\usepackage[hcentering,bindingoffset=8mm]{geometry} 
 % Change margins, papersize, etc of the document
-\usepackage[
-  left=28mm,% left margin on an odd page
-  right=41mm,% right margin on an odd page
-  ]{geometry}
+%\usepackage[
+  %left=28mm,% left margin on an odd page
+  %right=41mm,% right margin on an odd page
+  %]{geometry}
 
 \usepackage{hyperref} % hyperlinks in pdf
 \usepackage{cleveref} % clever references. Use with \cref...
 \let\origref\cref
-\def\cref#1{\emph{\origref{#1}}}
+\def\cref#1{\origref{#1}}
 \let\Origref\Cref
-\def\Cref#1{\emph{\Origref{#1}}}
+\def\Cref#1{\Origref{#1}}
 
 \usepackage{fancyvrb}
 
@@ -851,7 +894,7 @@ rsp, si, sil, sp, spl
 \usepackage{titlesec}
 \titleformat{\chapter}
   {\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
-\titlespacing*{\chapter}{0pt}{-2ex}{0ex}
+\titlespacing*{\chapter}{0pt}{-2ex}{2ex}
 
 \let\Oldpart\part
 \newcommand{\parttitle}{}
@@ -920,7 +963,7 @@ rsp, si, sil, sp, spl
 \newcommand*{\blankpage}{
 \vspace*{\fill}
 \begin{center}
-\textit{This page intentionally left (almost) blank.}\thispagestyle{empty}
+\textit{This page is intentionally left (almost) blank.}\thispagestyle{empty}
 \end{center}
 \vspace{\fill}}
 
@@ -1078,9 +1121,14 @@ rsp, si, sil, sp, spl
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
-\crefname{listing}{code}{code}
-\Crefname{listing}{Code}{Code}
+\crefname{listing}{code snippet}{code snippets}
+\Crefname{listing}{Code snippet}{Code snippets}
+\crefname{figure}{figure}{figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{equation}{equation}{equations}
+\Crefname{equation}{Equation}{Equations}
 
+\input{setup/hyphenations.tex}
 \usetikzlibrary{shapes,arrows}
 
 
@@ -1088,7 +1136,7 @@ rsp, si, sil, sp, spl
 % Everything is handled automatically in accordance with this
 % Use false for supervisor versions and final version
 \newif \ifDRAFT
-\DRAFTtrue
+\DRAFTfalse
 
 % Include hyphenations
 %\input{setup/hyphenations.tex}
@@ -1112,6 +1160,7 @@ rsp, si, sil, sp, spl
 \usepackage{stmaryrd}
 \usepackage{amsmath}
 \usepackage{mathtools}
+
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 
 
@@ -1119,4 +1168,42 @@ rsp, si, sil, sp, spl
   {\normalfont\scshape}{\theparagraph}{.1em}{}
   
 \titlespacing*{\paragraph} {0pt}{3.25ex plus 1ex minus 1.5ex}{-1em}
+\usepackage[anythingbreaks]{breakurl}
+%\usepackage[shortcuts]{extdash}
+%\usepackage{hyphenat}
 
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{53}}%
+\usepackage{textcomp}
+
+\usepackage{pgfplots}
+
+% argument #1: any options
+\newenvironment{customlegend}[1][]{%
+    \begingroup
+    % inits/clears the lists (which might be populated from previous
+    % axes):
+    \csname pgfplots@init@cleared@structures\endcsname
+    \pgfplotsset{#1}%
+}{%
+    % draws the legend:
+    \csname pgfplots@createlegend\endcsname
+    \endgroup
+}%
+
+% makes \addlegendimage available (typically only available within an
+% axis environment):
+\def\addlegendimage{\csname pgfplots@addlegendimage\endcsname}
+
+%\usepackage{showlabels}
+
+%\renewcommand{\lstlistingname}{Code Snippets}
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}
+
+\newcommand\emptypage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}

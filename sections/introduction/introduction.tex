@@ -1,35 +1,14 @@
-\chapter{Introduction}\label{ch:introduction}\label{\automlabel}
+\chapter{Introduction}\label{ch:introduction}
 %Motivation for embedded focus
-Embedded systems have been in use for a long time, with one of the earliest examples of a microprocessor-based commercially available system, being the Busicom  calculator based on the Intel 4004 microprocessor, which was released in 1971~\cite{intel4004}. Modern embedded systems are usually based on microcontrollers, which in addition to a processor also includes memory and input/output connections. Embedded systems are used in many everyday devices, and it is estimated that more than 90 percent of todays computer systems are embedded systems~\cite{embedded_nd}. This of course means that a large part of future software engineering will be concerned with embedded systems, which is also the focus in this project.\\
+Embedded systems have been in use for a long time. One of the earliest examples of a commercially available microprocessor-based system being the Busicom calculator, that was released in 1971 \cite{intel4004}. It was based on the Intel 4004 microprocessor. Modern embedded systems are usually based on microcontrollers, which in addition to a processor typically also include memory and input/output connections \cite{micro}. Embedded systems are used in many everyday devices, and it is estimated that more than 90 percent of today's computer systems are embedded systems~\cite{embedded_nd}. This of course means that a large part of future software engineering will be concerned with embedded systems, which is also the focus in this project.\\
 
 %Real world application of embedded systems
-One of the interesting areas in which embedded systems are in use today are tracking. Tracking is used in a many different systems, such as surveillance systems and military weapons, especially anti-air weapons. These systems can be very large in size, and have very high requirements for accuracy, reaction time, and constructional integrity. This project will focus on some of the underlying challenges of building a weapon system, but on a much smaller scale.\\
+One of the interesting areas in which embedded systems are in use today is tracking. Tracking is used in many different systems, such as surveillance systems and military weapons, an example being anti-air weapons \cite{phalanx}. These systems can have very high requirements for accuracy, reaction time, and integrity. This project will focus on some of the underlying challenges of building a weapon system, but on a much smaller scale.\\
 
 %Our project idea + initiating problem
-Motivation for this project is drawn from the popular sub-genre of video games called tower defense. In a game of tower defense several enemies move along a predetermined track, and different towers are then placed along the track, such that they can shoot at the enemies. The goal of the game is to set up the different towers available to you, in such a way that no enemy will reach the end of the track. This is made challenging by giving towers different properties. Examples could be one tower which aims badly but inflicts lot of damage if it hits, while another tower has a long range, fast rate of fire, but a small observable area. There are countless variations to the standard game, but we choose to focus on these basic parts of the game.\\
+Motivation for this project is drawn from the popular genre of computer games called tower defense. The purpose of the game is to strategically position defensive towers, such that they can shoot moving targets to stop them from reaching their goal. In a physical adaption of a tower defense game, the tower will have to face challenges similar to those of a military turret.\\
 
-In a physical adaption of a tower defense game, the tower will have similar challenges to a military turret, and will therefore be the focus in this project. This leads to this projects initiating problem.\\
-
-\textit{How can a physical adaptation of a tower defense game be developed?}
-
-
-\addtodo{FINAL}{CHANGE MARGIN BACK!}
-\eal
-
-%Although the project subject is an object of a game, the underlying problems, such as surveillance and movement diagnostics, are applicable in a wide variety of areas, from military ballistic analysis to general motion detection.
-
-
-
-%Problem statement / Initiating problem
-
-
-%\input{sections/introduction/problemstatement.tex}
-
-
-
-%A physical version of a tower defense game consists of several different components, a track, several enemies, and towers. Enemies will move along this track, and the towers objective is to hit these enemies, when they are within a certain range. In order to hit the targets, the towers need to track the targets, and adjust their aim accordingly. For this to be possible, each tower has to contain a small embedded system, that can react to some form of sensor input. This leads to this project problem statement. \\
-
-%\textit{How does one implement a program on an embedded system, such that the system can detect, track, and react to objects passing by?} \\
-
-%It is assumed that the passing objects are moving at a high enough speed that the tower can not successfully hit it if firing immediately when it registers an object, but instead has to predict the path of the object, and adjust its aim accordingly.
-%\eal
+This leads to the following initiating problem.
+\begin{center}
+\textit{How can a physical adaptation of a tower defense game be developed?}\\
+\end{center}

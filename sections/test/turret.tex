@@ -1,0 +1,60 @@
+\section{Turret}\label{sec:turrettest}
+The finished turret, designed in \cref{turret} and running the software implemented in \cref{ch:implementation}, is used in the conducted tests. The test is a white-box test, which consists of running a target past the turret multiple times, noting its performance. The internal functionality will not be subjected to unit tests, as acceptable goal conditions are not easily defined, and would not further provide information on the performance of the turret. \\
+
+The purpose of the test is to assess the turret's ability to detect and analyze movement, and its ability to react to this. While the test lacks the ability to pinpoint which part of the system is to blame for potential bad performance, it makes up for it by allowing for synergy between the modules. While this does not provide hard guarantees, it better portrays the entire systems ability to handle uncertainties. \\
+
+%All the requirements share the fact that a functioning turret, capable of hitting a moving target, would fulfill all of the requirements to a certain degree as they are essential to the successful execution of the task. If the turret manages to hit the moving target it means it has detected the target by monitoring the observable area and detecting movement, predicted the trajectory of the target and hit the target before it left the range of the turret. \\
+
+The turret tests will be performed using the same setup as the one used during the test of the infrared sensors, see \cref{senstest}. The sensors are mounted as seen in \cref{turret1}. The track on which the LEGO train travels is in the shape of a superellipse, 160 centimeters long and 70 centimeters wide. The entire setup can be seen in \cref{testsetup}. The observable area of the turret has a width of 138 centimeters.
+
+\imgscale{figures/testsetup.png}{The turret test setup}{testsetup}{0.5}
+
+The turret will be subjected to targets of three different speeds, which is all that the test setup allows for. The speeds of the targets are shown in \cref{tab:speeds}. These speeds are considered reasonable for portraying a potential final game. The difference in speed tests the turrets ability to analyze movement, as well as its ability to predict trajectory and shoot within a limited time frame.
+
+\input{sections/tables/test/speeds.tex}
+
+The mounted magazine has a capacity of 10 shots. Three tests were conducted at each speed with 10 shots fired in each test. During the testing it was noted whether the projectile hit the target, and in case it did not, the direction in which it missed was noted.
+
+%The speed of the LEGO train can be controlled using the control panel seen in the lower right of \cref{testsetup}. The speed can be changed in intervals with a total of six settings available, one being the slowest and six being the fastest. Only the first three settings are used for tests as anything above that causes the train to tip over when going through the corners on the track. Testing the turret's ability to hit targets moving at different speeds verifies that it is capable of analyzing the target's movement and reacting to it while also ensuring the turret performs it calculations within a limited time frame, allowing it to hit a target moving at a relatively high speed. \\
+
+\subsection{Test Results}\label{sec:turrettestresults}
+
+The results of these tests are noted in \cref{tab:speed1}.
+
+\input{sections/tables/test/speed1.tex}
+\smallskip
+All the fired projectiles hit the target at the first two speed settings. The turret excels at these speeds, as it is capable of hitting every target before it leaves the observable area every time. \\
+
+%At speed setting 2 not all the fired projectiles hit the target, six of them missing. All the missed shots at this speed were fired in front of the target.  \\
+
+Speed three is the least accurate of the three settings with the turret missing two out of 30 projectiles fired. The inaccuracy can be attributed to two probable causes: the train is moving too fast for the turret to gather enough information to make a good estimation, or the speed of the train results in inaccurate sensor readings which decreases the accuracy of the turret.
+
+
+%At speed setting 2 not all the fired projectiles hit the target, six of them missing. All the missed shots at this speed were fired in front of the target. The turret is still capable of performing all necessary calculations within the given time frame, however, due to the increased speed there is more noise in the sensor readings which in some cases causes the Kalman filter to make an incorrect prediction.
+
+
+% speed 2 rammer ikke, 2 årsager: 1) kører for hurtigt til at nå at få nok målinger til et godt estimat, 2) hastigheden har på en måde en indflydelse på usikkerheden i sensormålingerne, derfor ikke nær så præcis
+
+% speed 3 rammer ikke, samme som speed 2, bias til speed 3 hjælper måske lidt, men samtidig misses der konsekvent bagved, hvilket gør at vi nok kunne bruge et offset
+
+% Speed 1: 3,33 s/m = 0,3 m/s
+% Speed 2: 2,00 s/m = 0,5 m/s
+% Speed 3: 1,58 s/m = 0,6 m/s
+
+
+
+
+
+
+
+%A turret must be able to detect a target either through optics or by motion detection.\\
+   
+%The turret must either constantly monitor the entire observable area, cover key points, or search the observable area as described in \cref{observableArea}.\\
+    
+%A turret must be able to detect and analyze movement, and react accordingly.\\
+    
+%Detection, analysis and reaction must be done faster than the movements of the target.\\
+    
+%A turret must be able to predict the trajectory required to hit a target.\\
+
+%Prediction of trajectory, aiming and shooting a target must be done within a limited time frame.

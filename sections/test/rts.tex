@@ -1,0 +1,67 @@
+\section{Schedulability Analysis}
+The finished system was analyzed in order to determine its schedulability. If the system is schedulable it will be possible to guarantee that the tasks in the system will run within the specified time frame. In order to perform this analysis, the worst-case execution time (WCET) of the tasks will be identified. The WCET of a task, is the execution time of a task in the worst possible case.
+
+\subsection{OTAWA}
+Finding the WCET of a task is not a trivial task. One way to do this is by looking at the assembly instructions, that the code compiles to. This was done using OTAWA \cite{OTAWA}, which is a tool that counts the number of instructions in a function of the binary file. When the tool is first used it will notify the user if there are any unbounded loops. This can either be a loop that was implemented, OS or library code, or code that resembles a loop when optimized. The unbounded loops have to be assigned an upper bound, which is done either by using knowledge about the specific code, or by reverse engineering the instructions. Code from the OS it not always easy to find, therefore, reverse engineering was used to identify the bounds for this code. Once all loops are bound, OTAWA calculates a WCET in cycles. These cycles then have to be converted to milliseconds. The LEGO NXT has a CPU with a clock speed of 4800 cycles per millisecond. Because the  are required to be given as integers, they are always rounded up to the nearest integer.
+
+\subsection{Tasks}
+The finished system has the four tasks described in \cref{sec:impl_tasks}, where their periods and priorities were defined. The worst-case execution times of each of these tasks have been identified. As \emph{BackgroundTask} does not have a period, and only rund when no other tasks are released, it is not included in the schedulability analysis. All the worst-case execution times are in milliseconds, since this is a requirement from the OS \cite{scheduling1}. The tasks with their WCET, period, and priority is shown in \cref{tab:tasks}. 
+
+
+\input{sections/tables/Tasks}
+
+\subsection{Utilization Analysis}
+A utilization analysis \cite[slide 14]{utilization} is performed to determine if the system is schedulable. If a utilization analysis cannot determine whether the system is schedulable then other tests have to be performed. \\
+
+The total CPU usage is 70\% as seen in \cref{UtilizationBound}. This guarantees that the set of tasks is schedulable with the given periods as the total CPU usage must not exceed 78\% in a system with three tasks \cite{utilization}.
+
+\input{sections/tables/UtilizationBoundTest.tex}
+\medskip
+
+\subsection{Worst-case Response Time Analysis}
+In order to gain more insight into how the scheduler schedules the tasks, a worst-case response time (WCRT) analysis is performed \cite[slide 24-25]{utilization}. The results of this analysis can be seen in \cref{Worstcaseresponsetime}. The WCRT is calculated by adding together the WCET of the task currently being analyzed, with the WCETs of any tasks that are allowed to interrupt it. As \emph{BackgroundTask} is a background task it does not have a period or WCET, the WCRT is not calculated. The \emph{KalmanTask} has the highest priority which means it cannot be preempted by other tasks, so the WCRT is equal to WCET, which is 5 milliseconds. The \emph{WeaponSystemTask} has a WCET of 3 milliseconds, it can be interrupted by the \emph{KalmanTask} once and the \emph{ShootingTask} once, which gives it a WCRT of 9 milliseconds. The \emph{ShootingTask} has a WCET of one millisecond, therefore, it can be interrupted once by the \emph{KalmanTask}, which gives it a WCRT of 6 milliseconds.
+
+\input{sections/tables/Worstcaseresponsetime.tex}
+\medskip
+
+\subsection{Scheduling Model}
+To perform an test of whether a set of tasks is schedulable, without any assumptions, it is necessary to construct a model of the system, as this is not limited to a single uni-processor, in contrast to some simpler methods, such as the utilizations analysis. In order to construct this model, a modelling tool is used. In this project the Uppaal tool will be used, as it is made in collaboration with Aalborg University, providing access to reliable support in case of difficulties. Modelling does, however, still pose the problem that there is no mathematical way of proving that a given model correctly represents the system.
+
+\begin{figure}[H]
+\centering
+\def\svgwidth{\columnwidth}
+\input{figures/Task.pdf_tex}
+\caption{Uppaal Task}
+\label{uppaalTask}
+\end{figure}
+\medskip
+
+\Cref{uppaalTask} shows the task model made in Uppaal. The model has four states: idle, ready, running, and error. The error state does not exist in the CPU, however, it is required to show whether a task missed a deadline, and has entered an undefined state. Outside a hard real-time system, a missed deadline can be handled by keeping track of the number of missed deadlines, as a low amount of missed deadlines can be accepted. Ready is the initial state, which a task will enter when it is released. From this state a task can enter either the error state, if it misses its deadline, or the running state, if the task is allowed to run. When a task has finished, it enters the idle state, from where it can only enter the ready state. Additionally, a task can enter the ready state if it is running, and is preempted by a task of higher priority. \\
+
+\begin{sidewaysfigure}[p]
+\centering
+\def\svgwidth{\columnwidth}
+\input{figures/Sch.pdf_tex}
+\caption{Uppaal Scheduler}
+\label{uppaalScheduler}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\Cref{uppaalScheduler} shows the model of the scheduler. The scheduler has seven states, \emph{free}, \emph{switchingFree}, \emph{Occ}, \emph{switchingRunning}, and three dummy states which are only used as transit states. The states \emph{switchingFree} and \emph{switchingRunning} both handle context switching, from the \emph{free} state and the \emph{running} state. From these states the only allowed transition is to the \emph{Occ} (occupied) state. When no tasks are running the model is in the \emph{free} state, which can only transition to the \emph{switchingFree} state when a task is released. When a task is running, the scheduler is in the \emph{running} state, in which as task either runs till completion, of till a new task is released. If the task finishes, the scheduler can either run the next task, or wait for a new task, depending on the presence of a waiting task. If a new task is released, the scheduler will place it in the queue. If this new task has a lower priority than the currently running task, it will be ignored. If the new task instead has a priority higher than the currently running task, the scheduler will enter \emph{switchingRunning} and switch to the new task.
+
+\subsubsection{Model Check}
+The Gannt chart, see figure \cref{uppaalGantt}, shows the three tasks being scheduled: KalmanTask, WeaponSystemTask and ShootingTask. The scheduler itself uses the same color coding as the figure. The colors are explained in \cref{ganttcolors}.
+
+\input{sections/tables/GanttColors.tex}
+
+The model never enters the error state in any of the tasks from \cref{tab:tasks}. \Cref{uppaalGantt} shows 40 milliseconds of simulation on the model. The model clearly displays a major cycle of 20 milliseconds, a pattern it will keep repeating. The major cycle is found by taking the least common multiple of all the periods \cite[slide 17]{utilization}. 
+
+
+\begin{sidewaysfigure}
+\centering
+\def\svgwidth{\columnwidth}
+\input{figures/Gantt.pdf_tex}
+\caption{Uppaal Gantt}
+\label{uppaalGantt}
+\end{sidewaysfigure}
+

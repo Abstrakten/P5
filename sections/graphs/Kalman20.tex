@@ -1,0 +1,15 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[xlabel=Time in ms, ylabel=Position in degrees, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, legend pos=north west, legend cell align=left, xmin=0, ymin=-50]
+    \addplot[blue,line width=1pt] 
+         table [x=ms, y=pos_actual, col sep=comma] {sections/data/kalman_data_20.csv};
+         \addlegendentry{Measured position}
+    \addplot[red,line width=1pt] 
+         table [x=ms, y=pos_pred, col sep=comma] {sections/data/kalman_data_20.csv};
+         \addlegendentry{Predicted position}
+\end{axis}
+\end{tikzpicture}
+\caption{Kalman results with initial position at -20.}\label{kalman20}
+\end{figure}
+\FloatBarrier

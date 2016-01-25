@@ -1,0 +1,12 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[xlabel=Distance in mm, ylabel=Voltage in mV, ymajorgrids=true, grid style=dashed,legend cell align=left, width=14cm, height=9cm, domain=0, xmin=0]
+    \addplot[blue,line width=1pt] 
+         table [x=a, y=b, col sep=comma] {sections/data/brokensensor2.csv};
+         \addlegendentry{Sensor 2}
+\end{axis}
+\end{tikzpicture}
+\caption{Sensor voltage readings at different distances with the non-faulty sensor.}\label{brokensensor2}
+\end{figure}
+\FloatBarrier

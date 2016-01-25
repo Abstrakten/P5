@@ -1,7 +1,7 @@
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-    \begin{axis}[title=Sweep mode - 2 ultrasonic sensors, xlabel=Time in ms, ylabel=Distance in cm / Rev in degrees (motor), ymajorgrids=true, grid style=dashed,legend cell align=left, width=14cm, height=9cm, domain=0, xmin=0]
+    \begin{axis}[xlabel=Time in ms, ylabel=Distance in cm / Rot in degrees (motor), ymajorgrids=true, grid style=dashed,legend cell align=left, width=14cm, height=9cm, domain=0, xmin=0]
     \addplot[blue,line width=1pt] 
          table [x=a, y=c, col sep=comma] {sections/data/data-2sweep.csv};
          \addlegendentry{Sensor 1}
@@ -13,6 +13,6 @@
          \addlegendentry{Motor}
 \end{axis}
 \end{tikzpicture}
-\caption{Test with 2 ultrasonic sensors in sweep mode}\label{2sensorsweep}
+\caption{Test with 2 ultrasonic sensors in sweep mode.}\label{2sensorsweep}
 \end{figure}
 \FloatBarrier

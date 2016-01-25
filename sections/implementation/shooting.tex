@@ -1,0 +1,80 @@
+\section{Shooting}
+This section covers the implementation of the software components involved in the turret's shooting process. The functionality of some of these components are dependent on the PID controller, whose implementation was explained in \cref{imp:PID}.
+
+\subsection{Cock Function}
+Before the turret shoots at the target, it will cock its weapon system. This is done through the \emph{cock} function which, when called, sets the \emph{WSRotation} variable such that the weapon system will rotate into a "ready to fire" position. This is done by using the PID controller to make the rotating rods turn to the given position, such that it neither overshoots nor undershoots the "ready to fire position" by a noticeable margin. The \emph{cock} function and the use of the \emph{WSRotation} variable can be seen in \cref{cfunc} and \cref{WSRuse}. Due to the gear ratio, 600 degrees of motor rotation is equal to 360 degrees of rotation on the rotating rods.
+
+\begin{lstlisting}[style=customc, label={cfunc}, caption={Cock function}]
+void cock()
+{
+	WSRotation = shotsfired * 300 + 150;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=customc, label={WSRuse}, caption={WSRotation variable used in a PID function call}]
+TASK(ShootingTask)
+{
+	MotorPID(WSRotation,WSMOTOR1, 0);
+	MotorPID(WSRotation,WSMOTOR2, 0);
+    TerminateTask();
+}
+\end{lstlisting}
+
+\subsection{Fire Function}
+The turret fires a projectile by calling the \emph{fire} function which can be seen in \cref{firefunc}. The \emph{fire} function also uses the \emph{WSRotation} variable in the same manner as the \emph{cock} function. The function also increments the \emph{shotsfired} variable and returns its new value when called. The \emph{shotsfired} variable is used to count how many shots have been fired and, thereby, increase the \emph{WSRotation} between each shot. As \emph{WSRotation} is only reset when the program terminates, the rotation required to fire one to many shots increases with 300 per shot.
+
+\begin{lstlisting}[style=customc, label={firefunc}, caption={Fire function}]
+S32 fire() {
+    ++shotsfired;
+    WSRotation = shotsfired * 300 + 150;
+    return shotsfired;
+}
+\end{lstlisting}
+
+The turret may not begin its firing preparations before the target has been detected by the sensors, represented by the \emph{targetSeenFlag} condition in the first \emph{if}-statement in \cref{fireprep}. Once the target has been spotted the turret will cock the weapon system. In order to ensure the turret actually tracks the target instead of just shooting as soon as it detects it, a delay is added. The delay is added as the first condition in the second \emph{if}-statement in \cref{fireprep}. The condition checks whether the motor has rotated past 30 degrees. The second condition checks the value of the \emph{shootFlag} which registers whether or not the turret has already fired a projectile. The third condition is a call to the \emph{motor\_in\_range} function, with an input of three. This function checks whether the turret is within $\pm 3$ degrees of the target's estimated position, as this was the highest tolerable margin of error. If all three conditions in the \emph{if}-statement evaluate to true the turret will fire, the \emph{shootFlag} variable will be set to a value representing true, and \emph{resetCounter} will be set to one.
+
+\begin{lstlisting}[style=customc, label={fireprep}, caption={Ready to fire}]
+if (targetSeenFlag) {
+    cock();
+    if (nxt_motor_get_count(NXT_PORT_A) > 30 && !shootFlag && motor_in_range(3)) {
+        shootFlag = fire();
+        resetCounter = 1;
+    }
+}
+\end{lstlisting}
+
+\subsection{Resetting the Turret}
+Firing the turret will enable the reset counter, see \cref{resetinc}. As \emph{shootFlag} is no longer zero, the turret will no longer fire or set the value of \emph{resetCounter}. Instead, \emph{resetCounter} will be incremented by one every 100 milliseconds. This is used to handle the turret's two reset phases. The two reset phases allow the time sensitive tasks of resetting the turret and the weapon system to finish before a new target will be tracked.
+
+\begin{lstlisting}[style=customc, label={resetinc}, caption={Incrementing the reset counter}]
+if (resetCounter > 0) {
+    resetCounter++;
+}
+systick_wait_ms(100);
+\end{lstlisting}
+
+\Cref{resetphase1} shows the first reset phase. The turret will enter this phase once the \emph{resetCounter} variable has been incremented five times. In this phase, the Kalman filter is disabled by setting \emph{enableKalmanTaskFlag} to zero, the target is marked as no longer being detected, the rotating rods of the weapon system are set to their initial position and finally, the turret is moved to its original, rightmost position where it will await a new target.
+
+\begin{lstlisting}[style=customc, label={resetphase1}, caption={Reset phase 1}]
+if (resetCounter == 6) {
+    enableKalmanTaskFlag = 0;
+    targetSeenFlag = 0;
+    WSRotation -= 150;
+    resetTowerTo(0 - resetRot);
+    resetRot -= -nxt_motor_get_count(NXT_PORT_A);
+}
+\end{lstlisting}
+
+The second reset phase will be activated once the \emph{resetCounter} has been incremented an additional six times for a total of 12, see \cref{resetphase2}. The second phase resets the \emph{resetCounter} to zero such that the turret reset can be carried out again, re-enables the Kalman filter by setting \emph{enableKalmanTaskFlag} to one, and it calls the \emph{reset()} function. This function will revert all variables and matrices used in the Kalman filter to their original values such that the turret is prepared to track a new target. 
+
+%The turret reset is split into two phases with a 100 millisecond delay between each incrementation of the \emph{resetCounter} in order to allow other time sensitive tasks to finish before the turret has to track another target. Among these tasks are rotating the turret back to its original position and resetting the weapon system.
+\begin{lstlisting}[style=customc, label={resetphase2}, caption={Reset phase 2}]
+if (resetCounter == 12) {
+    resetCounter = 0;
+    reset();
+    enableKalmanTaskFlag = 1;
+}
+\end{lstlisting}
+
+
+

@@ -1,0 +1,26 @@
+\section{Sensor Communication}
+The LEGO NXT has four input ports, each with an independent I$^2$C controller, which the NXT uses to communicate with sensors and actuators, where both read and write actions should be possible. I$^2$C is also used for receiving signals from digital sensors, though other protocols are used for handling analog data. One I$^2$C controller acting as a master can communicate with many I$^2$C slave devices, such as sensors. The I$^2$C master broadcasts an address and register, which the slave devices listen to, and the device with the corresponding address will then either respond with the value of the register, or set the register in case of a write request. Registers are not hardware registers, but emulated in software on both the slave and the master side. The registers can be considered as an array, and the register addresses as the array indexes. 
+\\
+
+The sonar and infrared distance sensors both use I$^2$C to communicate with the NXT brick. The nxtOSEK library includes an API for the sonar sensor, but none for the infrared distance sensor. The I$^2$C \emph{send} and \emph{receive} functions, along with the function described in \cref{ss:minddist} for calculating distance, were used to retrieve the distance from the two infrared distance sensors.\\
+
+In this project I$^2$C sensors have been used exclusively, as these were the only types supplied by Aalborg University. The reasoning behind having four independent I$^2$C controllers would be to prevent address conflicts from happening. Address conflicts happen when the master device broadcasts an address, and two devices respond because they are assigned the same address. Furthermore, by having four independent I$^2$C controllers, all identical sensor types can have the same address from the manufacturer, such that a user is not required to specify an I$^2$C address when using a sensor, or change the I$^2$C address of any sensors. \\
+
+%The NXT has four input ports each with a independent i2c controller, which the NXT uses to communicate with sensor or actuators where both read and writing should be possible. i2c devices are also used of the NXT when sensors send digital signals, other protocols are used for analog data. One i2c controller acting as a master can communicate with many i2c slave devices such as sensors. The i2c master broadcast an address and register signal, and the slave device with the corresponding address will then either respond the value of the register, or set the register in case of a write request from the master device. \\
+
+%In this project only i2c sensors has been used, because only i2c sensors were available from the legolab. I2c reads and writes to register, stored on the slave device. The reason logic reason to chose four independent i2c controllers as on the NXT would be to prevent address conflict from the happening for the application programmer. Address conflicts is when the master device broadcast an address and two devices responds because they are assigned the same address. Furthermore by having four independent i2c controllers all identical sensor types can have the same address from the manufacture and then the code communicating does not have to take user input inform of i2c address.
+ 
+The \emph{send} function is shown in \cref{i2cSend}. It takes five parameters and returns an integer representing a status flag, zero if it succeeded and one if it failed. The first parameter is the NXT port to indicate which I$^2$C controller to use. The second parameter is the I$^2$C address of the slave device, which can be constant in the sensors APIs, assuming the same address for identical sensor types. The third parameter is the address of the first register on the slave device. The fourth parameter is a pointer to the data that should be stored in the registers. The fifth parameter is the size, in bytes, of the data that should be sent to the slave. Every register on the slave can hold no more than one byte. In case of the last parameter being larger than one byte, the rest of the data will be stored in the registers following the start address.
+
+\begin{lstlisting}[style=customc, label={i2cSend}, caption={Sending data over I$^2$C}]
+SINT ecrobot_send_i2c(U8 port_id, U32 address, SINT i2c_reg, U8 *buf, U32 len)
+\end{lstlisting}
+
+The \emph{receive} function in \cref{i2cRead} works the same way as the \emph{send} function, except for the fourth parameter which in this case is an output parameter, in the form of a pointer to the memory address at which the I$^2$C controller will write the received data, and the last parameter is the amount of register that should be read. Both functions are non-blocking, without any way of knowing when the data has been received. These functions are provided by the nxtOSEK library.
+
+\begin{lstlisting}[style=customc, label={i2cRead}, caption={Receiving data over I$^2$C}]
+SINT ecrobot_read_i2c(U8 port_id, U32 address, SINT i2c_reg, U8 *buf, U32 len)
+\end{lstlisting}
+
+
+

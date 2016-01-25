@@ -1,3 +1,8 @@
-\begin{center}
-    bla bla STUFF 
-\end{center}
+This is a project on the design and implementation of an autonomous turret, as a part of creating a physical version of a Tower Defense game. The report covers problem analysis, hardware analysis, design, and implementation. The solution was evaluated based on a set of requirements, by testing and finally concluding on the results.\\
+    
+The solution employs motion-detection through two infrared distance sensors, combined with a Kalman filter in order to estimate the position of passing targets. The construction of the sensors has a consequence of giving different distance readings in different angles, which is used to estimate a target's position. The system employs a proportional integral derivative controller in order to increase the precision of the motors.\\
+
+The turret is capable of estimating the location of a target moving past the turret such that it can hit it with a projectile. The target must be moving at a constant speed while passing the turret, but the speed can change in-between passes.
+
+    
+% The problem which the project is based upon, is in its essence a simple problem to understand, and can be crudely summarized as making one thing automatically shoot passing things. This made the problem analysis mostly a matter of dissecting and interpreting a simple domain, where all the information is empirically available, into smaller essential parts. Interpretation of empirical information always prompts a degree of caution, since it is at least partially influenced by subjective views, but being aware of this pitfall and critical of the reasoning, limits mistakes.

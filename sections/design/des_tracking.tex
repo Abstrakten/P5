@@ -1,0 +1,344 @@
+\section{Tracking}\label{sec:design_tracking}
+%%%% Intro to tracking - Why is it needed? 
+One of the primary tasks of the turret is tracking targets passing by in its observable area. Using the two-sensor setup, this tracking must preferably be done continuously in order to obtain as much information about the target as possible, by keeping the target within the sensors' field of view. This is done by having the rotation motor react to observations made by the sensors. \\
+
+%%%% Naive approach
+A very simple approach to this tracking problem, could be to simply activate the motor, turning it either left of right, based directly on each observation made by the sensors. The method could then be further refined by turning with different speeds, depending on the exact zone in which the target was observed. This approach might be effective if every observation provided by the sensors was perfectly accurate. \\
+
+The sensors used for tracking are, however, not accurate, and produce noisy observations which may result in an incorrect estimate of the actual position of the target. If the turret were to act on these noisy observations, this might cause the turret to turn erroneously, possibly losing sight of the target, or overshooting and having to readjust immediately after. In order to improve the precision of the turret, the noisy observations have to be taken into account. For this purpose, different methods for reducing the impact of noisy observations are examined.
+
+\subsection{Naive Bayes Classifier} \label{ss:naive_bayes}
+%%%% Naive Bayes classifier
+One possible approach for this could be to use a naive Bayes classifier. With this model, instead of directly reacting to an observation, the position of the target can be represented by a probability, distributed over several different possible positions~\cite{poole2010artificial}. The possible classes, contained in the class variable, would be all the possible speeds of the target. A binary feature variable would then exist for each of the possible positions within the observable area of the turret, where the binary value indicates whether the target was observed in the given position. This structure is shown in \cref{fig:bayes_classifier}. 
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}
+
+    \draw (3,3) circle [radius=0.5] node {$C$};
+    
+    \draw [-triangle 90,fill=black](2.75,2.55) --  (0.3,0.4);
+    
+    \draw (0,0) circle [radius=0.5] node {$F_1$};
+    
+    \draw [-triangle 90,fill=black](2.9,2.5) --  (2,0.5);
+
+    \draw (2,0) circle [radius=0.5] node {$F_2$};
+
+    
+    \draw [-triangle 90,fill=black](3.35,2.6) --  (5.7,0.4);
+    
+    \draw (6,0) circle [radius=0.5] node {$F_k$};
+    
+    \draw [dotted, line width=1pt](2.6,0) --  (5.4,0);
+
+
+\end{tikzpicture}
+\end{center}
+\caption{Graphical representation of a naive Bayes classifier.}
+\label{fig:bayes_classifier}
+\end{figure}
+
+With this model it would be possible to predict the values of the class variable given evidence for some of the features using Bayes rule~\cite{poole2010artificial}. Each time a new observation is made, the probability in the classification variable would be updated. This model does, however, have limitations, such as quite large probability tables as well as a lack of native support of the temporal aspect that exists in the project~\cite{poole2010artificial}. Because of this, other models, with the temporal aspect included, will be considered instead.
+
+%%%% Hidden markov model
+\subsection{Hidden Markov Model} \label{ss:hmm}
+A hidden Markov model (HMM) is a specialization of the more general dynamic Bayesian network, which is a Bayesian network where variables are related in respect to adjacent time steps \cite{poole2010artificial}. The model assumes the system to be a Markov process, where each state is dependent only on the previous state, meaning $P(x_k | x_0,x_1,...,x_{k-1}) = P(x_k | x_{k-1})$, where $x_k$ is the state of the system at discrete time step $k$~\cite{poole2010artificial}. This relation can be seen in \cref{fig:hmm}. 
+
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}
+
+    \draw [-triangle 90,fill=black](-1.5,2) --  (-0.5,2);
+    
+    \draw (0,0) circle [radius=0.5] node {$y_{k-1}$};
+    \draw [-triangle 90,fill=black](0,1.5) --  (0,0.5);
+    \draw (0,2) circle [radius=0.5] node {$x_{k- 1}$};
+    
+    \draw [-triangle 90,fill=black](0.5,2) --  (2.5,2);
+    
+    \draw (3,0) circle [radius=0.5] node {$y_{k}$};
+    \draw [-triangle 90,fill=black](3,1.5) --  (3,0.5);
+    \draw (3,2) circle [radius=0.5] node {$x_k$};
+    
+    \draw [-triangle 90,fill=black](3.5,2) --  (5.5,2);
+    
+    \draw (6,0) circle [radius=0.5] node {$y_{k+1}$};
+    \draw [-triangle 90,fill=black](6,1.5) --  (6,0.5);
+    \draw (6,2) circle [radius=0.5] node {$x_{k+1}$};
+    
+    \draw [-triangle 90,fill=black](6.5,2) --  (7.5,2);
+
+
+\end{tikzpicture}
+\end{center}
+\caption{Graphical representation of the hidden Markov model for the system.}
+\label{fig:hmm}
+\end{figure}
+
+By making this assumption, it is possible to predict the current state of the system, given only the prior state. Additionally, the model assumes that the state at each time step is not directly observable, instead an observation is associated with the state at each time step. By using the observation, the values of the hidden state variables can be estimated~\cite{poole2010artificial}. \\
+
+Hidden Markov models are used in situations where certain information is necessary to obtain, without it being directly observable~\cite{ghahramani2001introduction}, as is the case in this project. While a HMM seems like a suitable solution, it does have certain limitations which would have to be accounted for. One such limitation is the assumption that the hidden state values in a HMM are discrete values~\cite{ghahramani2001introduction}. This is a disadvantage for this project, as the true state is continuous. This can be overcome by a discretization of the possible values for position and speed. As there are many possible positions and speeds, this will, however, result in a necessary construction of a large probability table. In an attempt to avoid this, an alternative without this limitation, namely the Kalman filter, is considered. 
+
+%%%% Kalman filter
+\subsection{Kalman Filter} \label{ss:kalman}
+The Kalman filter is based on a hidden Markov model, with the difference that it is used for linear systems only, and the values in the hidden state are continuous rather than discrete \cite{faragher2012understanding}. While the Kalman filter does not require a Gaussian error distribution, in cases where the error is indeed Gaussian, the filter is an optimal estimator~\cite{kalman1960new}. The Kalman filter is very suitable for use in this project, as the assumption of a linear system holds, and the system can be modelled with high precision using this filter. Due to the filter working on continuous variables, the calculations can be done probabilistically using matrices, not requiring any probability tables, and due to the Markov assumption, only the matrices for the previous time step, and a current observation, are required for the computation, making it very suitable for an embedded real-time system~\cite{faragher2012understanding}. \\
+
+%%%% The different processes/parts of the filter
+Before the system, consisting of the turret and target, can be modelled, it is necessary to gain a better understanding of the functionality of the Kalman filter. Therefore, the vectors, matrices, and equations used in the calculations will first be examined. To distinguish vectors and matrices from scalars, vectors and matrices are denoted by bold font lower and upper case letters, respectively. The equations and theory used in the design of the Kalman filter is based on \cite{faragher2012understanding} and \cite{kalman1960new}. Before the equations used for calculating the estimated state are examined, the underlying assumption about the hidden true state is outlined.
+
+\subsubsection{True State}
+In a Kalman filter, it assumed that the evolution of the system's true state can be calculated according to the equation
+
+\begin{equation}
+\label{eq:state_equation}
+  \vec{x}_k = \matr{F}_k \vec{x}_{k-1}+\matr{B}_k \vec{u}_k + \vec{w}_k \text{ ,}
+\end{equation}
+
+where $\vec{x}_k$ is the state vector, containing a set of continuous variables, representing the true state of the system at time $k$. These variables are assumed to be hidden in the Kalman filter. $\matr{F}_k$ is the state transition matrix, which describes how the state at time $k-1$ transitions into the state at time $k$. \\
+
+$\vec{u}_k$ is the control vector, containing information about a known control input, such as acceleration, at time $k$. $\matr{B}_k$ is the control-input matrix, used to apply the effect of the control vector at time $k$ to the current state $\vec{x}_k$. \\
+
+$\vec{w}_k$ is the process noise vector, containing continuous random variables representing the noise in the transition process for each state variable. As the random variables are continuous, their probability distribution is described by a probability density function (PDF). The noise is assumed to be white noise, with a Gaussian distribution. The variance of the noise vector at time $k$ is given by covariance matrix $\matr{Q}_k$, such that $\vec{w}_k \sim \mathcal{N}(0, \matr{Q}_k)$. \\
+
+Measurements of the true state are made according to the equation
+
+\begin{equation}
+\label{eq:true_measurement}
+  \vec{z}_k = \matr{H}_k \vec{x}_k + \vec{v}_k \text{ ,}
+\end{equation}
+
+where $\vec{z}_k$ is the measurement vector, containing the measurements of the true state at time $k$. $\matr{H}_k$ is the measurement transformation matrix, which maps the state vector into a measurement vector. This $\matr{H}_k$ matrix is necessary when the variables in the measurement vector do not directly correspond to the variables in the state vector. \\
+
+$\vec{v}_k$ is the measurement noise vector, which contains continuous random variables, describing the noise in the measurement variables at time $k$. This noise is also assumed to be Gaussian distributed white noise, with variances given by covariance $\matr{R}_k$, such that $\vec{v}_k \sim \mathcal{N}(0, \matr{R}_k)$. \\
+
+\subsubsection{Estimated State}
+The Kalman filter generally estimates the state in a two-step process. First a prediction step, followed by an update step~\cite{faragher2012understanding}. The purpose of the predict step is to estimate the current true state, based on the previous prediction. In the update step a new observation is made, and the estimate is updated according to this observation. The update step takes into account the reliability of each measurement, and places more weight on measurements with a higher certainty~\cite{faragher2012understanding}. \\ 
+
+In the prediction step, the state estimate at time $k$ is predicted, based on the previous estimate, by the equation
+
+\begin{equation}
+\label{eq:predict_state}
+  \hat{\vec{x}}_{k|k-1} = \matr{F}_k \hat{\vec{x}}_{k-1|k-1} + \matr{B}_k \vec{u}_k \text{ ,}
+\end{equation}
+
+where $\hat{\vec{x}}_k$ is the state estimate vector, which represents the estimate of the true state at time $k$. This vector has the same dimensions as the true state, but here the variables are estimates, and thus subject to uncertainties. Therefore the variables in $\hat{\vec{x}}_k$ are continuous random variables, associated with a probability distribution represented by a PDF . The variance of the state estimate vector is given by covariance matrix $\matr{P}_k$. This covariance is predicted according to the equation 
+
+\begin{equation}
+\label{eq:predict_covariance}
+  \matr{P}_{k|k-1} = \matr{F}_k \matr{P}_{k-1|k-1} \matr{F}_k^T + \matr{Q}_k \text{ .}
+\end{equation}
+
+Compared to \cref{eq:state_equation}, the process noise is omitted in \cref{eq:predict_state}. This omission is due to the noise being assumed to be white noise, and as such only the covariance in this noise $\matr{Q}_k$, included in \cref{eq:predict_covariance} is considered. The estimates predicted according to \cref{eq:predict_state,eq:predict_covariance} are called a priori estimates of the state and covariance, as they are not yet updated with the observation from time $k$. \\
+
+In the update step the state and covariance predictions are updated with information from a new measurement. Both these updates rely on a Kalman gain matrix $\matr{K}_k$, that describes how much weight should be put on the prediction compared to the measurement. A high Kalman gain means the filter weighs the measurement higher, while a low Kalman gain means the filter weighs the estimate higher. This Kalman gain $\matr{K}_k$, is calculated using \cref{eq:kalman_gain}.
+
+\begin{equation}
+\label{eq:kalman_gain}
+ \matr{K}_k = \matr{P}_{k|k-1} \matr{H}_k^T \big(\matr{H}_k \matr{P}_{k|k-1} \matr{H}_k^T + \matr{R}_k \big)^{-1}
+\end{equation}
+
+The state is updated with the new measurement according to \cref{eq:update_state}, and the covariance is updated according to \cref{eq:update_covariance}, where $\matr{I}$ is the identity matrix in the same dimensions as $\matr{P}_k$.
+
+\begin{equation}
+\label{eq:update_state}
+  \hat{\vec{x}}_{k|k} = \hat{\vec{x}}_{k|k-1} + \matr{K}_k (\vec{z}_k - \matr{H}_k \hat{\vec{x}}_{k|k-1})
+\end{equation}
+
+\begin{equation}
+\label{eq:update_covariance}
+\begin{split}
+    \matr{P}_{k|k} &= \matr{P}_{k|k-1} - \matr{K}_k \matr{H}_k \matr{P}_{k|k-1} \\
+            &= (\matr{I} - \matr{K}_k \matr{H}_k) \matr{P}_{k|k-1}
+\end{split}
+\end{equation}
+
+An overview of the two steps, along with the recursive nature of the Kalman filter, is shown in \cref{fig:kalman_filter}.
+
+\imgscale{figures/kalman_filter.png}{Overview of the steps in the Kalman filter~\cite{kalman_figure}.}{fig:kalman_filter}{0.3}
+
+The Kalman filter can be implemented using \cref{eq:kalman_gain,eq:update_state,eq:update_covariance}. In order to implement these equations, it is necessary to identify the $\matr{F}_k$, $\matr{B}_k$, $\matr{P}_k$, $\matr{Q}_k$ matrices, along with the $\vec{x}_k$, $\vec{u}_k$, and $\vec{z}_k$ vectors for a given system.
+
+%%%% Modelling the system
+\subsubsection{The System Model}
+The hidden state of interest is the state of the target, particularly its position and speed. This results in the state estimate vector $\vec{x}_k$, shown in \cref{eq:state_vector}, with two continuous random variables. As the state estimate vector has two variables, it will have a 2-by-2 covariance matrix $\matr{P}_{k_{2,2}}$, shown in \cref{eq:covariance_matrix}, where $var(y_1)$ and $cov(y_1,y_2)$ denote the variance of a random variable, and the covariance between two random variables, respectively. 
+
+\begin{equation}
+\label{eq:state_vector}
+  \vec{x}_k =
+     \begin{bmatrix}
+      x_k \\
+      \dot{x}_k 
+     \end{bmatrix}
+    =
+    \begin{bmatrix}
+      position_k \\
+      speed_k
+     \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:covariance_matrix}
+    \matr{P}_k =
+    \begin{bmatrix}
+      p_{k_{1,1}} & p_{k_{1,2}} \\
+      p_{k_{2,1}} & p_{k_{2,2}}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      var(x_k) & cov(x_k, \dot{x}_k) \\
+      cov(x_k, \dot{x}_k) & var(\dot{x}_k)
+    \end{bmatrix}
+\end{equation}
+
+The speed of the target can not be measured by the sensors, so the measurement will consist of only a scalar $z_k$, which is the target's measured position, with a noise of $v_k$. This measurement is calculated by using the position of the turret at time $k$, denoted $c_k$, and adding the relative position measured by the sensors, see \cref{areas} in \cref{sec:dessensor}, here denoted $d_k$, giving 
+
+\begin{equation}
+\label{eq:relative_measurement}
+  z_k = c_k+d_k
+  \text{ .}
+\end{equation}
+ 
+The measured position maps directly into the state position, so disregarding the state's speed variable gives the measurement transformation matrix $\matr{H}_k$ shown in \cref{eq:measurement_transform}.
+
+\begin{equation}
+\label{eq:measurement_transform}
+  \matr{H}_k =
+     \begin{bmatrix}
+      1 & 0 
+     \end{bmatrix}
+\end{equation}
+
+Using this $\matr{H}_k$ matrix we obtain
+
+\begin{equation}
+\label{eq:measurement}
+\begin{split}
+  z_k &= \matr{H}_k \vec{x}_k + v_k \\
+      &=
+         \begin{bmatrix}
+          1 & 0
+         \end{bmatrix}
+         \begin{bmatrix}
+          x_{pos} \\
+          \dot{x}_{vel} 
+         \end{bmatrix}
+         + v_k \\
+     &= x_{pos} + v_k
+     \text{ ,}
+\end{split}
+\end{equation}
+
+which describes the connection between a measurement and a state. \\
+
+As each target is assumed to be traveling at a constant speed, see \cref{sec:tracking}, the system has no known control input vector, so the control input matrix $\matr{B}_k$ and control vector $\vec{u}_k$ can be omitted, reducing \cref{eq:predict_state} to
+
+\begin{equation}
+\label{eq:reduced_predict_state}
+  \hat{\vec{x}}_{k|k-1} = \matr{F}_k \hat{\vec{x}}_{k-1|k-1} \text{ .}
+\end{equation}
+
+Additionally, based on the assumption of a constant speed, it is assumed the system will not be subject to any significant noise between transitions. As such the process noise covariance $\matr{Q}_k$ will be zero, and thus \cref{eq:predict_covariance} can be reduced to
+
+\begin{equation}
+\label{eq:reduced_predict_covariance}
+   \matr{P}_{k|k-1} = \matr{F}_k \matr{P}_{k-1|k-1} \matr{F}_k^T \text{ .}
+\end{equation}
+
+The state transition matrix $\matr{F}_k$ describes the change in the position and speed of the target between two consecutive time steps. The change in the target's position depends on the elapsed time since the previous state prediction, and the speed of the target, according to the equation $x_t = x_{t-1} + \dot{x}_{t-1} \Delta t $, while the speed remains constant, given by $\dot{x}_t = \dot{x}_{t-1}$. This can be rewritten in matrix form as
+
+\begin{equation}
+\label{eq:state_transition_calculation}
+\begin{split}
+  \begin{bmatrix}
+  x_t \\
+  \dot{x}_t
+  \end{bmatrix}
+      &=
+  \begin{bmatrix}
+    x_{t-1} + \dot{x}_{t-1} \Delta t \\
+    \dot{x}_{t-1}
+  \end{bmatrix}
+  \\
+      &=
+     \begin{bmatrix}
+      1 & \Delta t \\
+      0 & 1
+     \end{bmatrix}
+     \begin{bmatrix}
+      x_{t-1} \\
+      \dot{x}_{t-1} 
+     \end{bmatrix}
+     \text{ ,}
+\end{split}
+\end{equation}
+
+giving the state transition matrix
+
+\begin{equation}
+\label{eq:state_trans_matrix}
+    \matr{F}_k =
+    \begin{bmatrix}
+      1 & \Delta t \\
+      0 & 1
+    \end{bmatrix}
+    \text{ .}
+\end{equation}
+
+While the state estimate and state covariance are calculated at each iteration of the filter, initial values must be specified. The initial position will be equal to the first possible measurement of the target, with some small amount of variance, and can therefore be calculated according to \cref{eq:relative_measurement}. The turret always starts in position zero, giving the initial turret position $c_0=0$. The target will always be moving from right to left, and so the first observation will always be made in zone $2$, giving the initial relative measurement $d_0=-20.74$. The initial position $x_0$ can then be approximated by $x_0 = c_0+d_0$. As this approximation will be relatively accurate, its initial variance will be low. As long as the variance is relative low, the exact value does not have a large impact. As such the initial variance $var(x_0)$ is specified as $p_{0_{1,1}} = 1$. \\
+
+The speed of the target is controlled discretely, and can in general have $i$ possible discrete values $s_1, s_2, \dots, s_i$. In practice, observations have shown the speed to be continuous. This variation will, however, be disregarded when specifying the initial speed. Assuming an equal probability of the target's possible speeds, the most accurate initial speed can be specified as the mean of these speeds, given by $\bar{s}=(s_1+s_2+\dots+s_i)/i$.  \\
+
+If the initial speed is specified as the expected value $\bar{s}$, and this initial value is to have an impact on the speed prediction, the variance would have to be relatively low. This is, however, problematic as the actual speed is not known, and will as such be subject to uncertainties. Alternatively, the initial speed might simply be specified as an arbitrary, somewhat realistic, value, with a high variance accounting for the inaccurate value. The Kalman filter is very effective at dealing with uncertainties, consequently favoring the latter alternative method. As such the initial speed will simply be set as an arbitrary value of 50 degrees per second matching the measured speed at the second speed setting. This gives the initial state
+
+\begin{equation}
+\label{eq:initial_state}
+\begin{split}
+    \mathbf{x_0} &=
+    \begin{bmatrix}
+      x_0 \\
+      \dot{x}_0 
+    \end{bmatrix}
+    \\
+    &=
+    \begin{bmatrix}
+      c_0+d_0 \\
+      50
+    \end{bmatrix}
+    \\
+    &=
+    \begin{bmatrix}
+      -20.74 \\
+      50
+    \end{bmatrix}
+    \text{ .}
+\end{split}
+\end{equation}
+
+As the actual speed is unknown, and the initial speed was chosen arbitrarily, the variance of the initial speed will be high. Again, the exact value is not very important, but as the largest difference between the initial and the two other possible speeds is $30$ degrees per second, the initial variance is specified as this value squared, giving $p_{0_{2, 2}} = 30^2$. As the the state variables are independent of each other, the covariance is set as $p_{0_{1,2}}=p_{0_{2,1}}=0$. This gives the initial covariance matrix
+
+\begin{equation}
+\label{eq:initial_covariance}
+\begin{split}
+    P_0 &=
+    \begin{bmatrix}
+      p_{1,1} & p_{1,2} \\
+      p_{2,1} & p_{2,2}
+    \end{bmatrix}
+    \\
+    &=
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & 30^2
+    \end{bmatrix}
+    \\
+    &=
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & 900
+    \end{bmatrix}
+    \text{ .}
+\end{split}
+\end{equation}
+
+Based on this model, a Kalman filter can be implemented for the system. In particular the filter can be implemented using the $\matr{H}_k$, $\matr{F}_k$, and $\matr{P}_0$ matrices specified in \cref{eq:measurement_transform,eq:state_trans_matrix,eq:initial_covariance}, along with the $\vec{x}_0$ vector from \cref{eq:initial_state}, with a predict step using \cref{eq:reduced_predict_state,eq:reduced_predict_covariance}, and an update step using \cref{eq:kalman_gain,eq:update_state,eq:update_covariance}.

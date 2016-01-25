@@ -1,0 +1,29 @@
+\section{Detection}\label{sec:detectionimp}
+The defines shown in \cref{sensor_area} define which sensor areas have been implemented, according to the design in \cref{sec:dessensor}. Each zone denoted with \emph{RIGHT}, also has a \emph{LEFT} counterpart, where the value is negative. The areas marked by \emph{RIGHT\_4}, \emph{LEFT\_4}, and \emph{UNKNOWN} are used to manage the zones outside the field of view of the sensors. Zones \emph{RIGHT\_4} and \emph{LEFT\_4} are used when the target has been inside the observable area, but has exited the sensors' field of view, to the right or left side, respectively, whereas \emph{UNKNOWN} is used when the target has not yet been observed. This ensures that the Kalman filter does not start its estimation before the sensors have detected anything, but it will keep trying to find the train if it has already been detected once by the sensors, even when leaving the observable area.
+
+%The defines in \cref{sensor_area} shows which areas is implemented, from \cref{sec:dessensor} \enquote{0}, \enquote{1}, \enquote{2} and \enquote{3} the same exists in negative. The \enquote{4} and \enquote{5} is to manage the zone outside the sensors field of view. The difference between \enquote{4} and \enquote{5} is when it is \enquote{4} the train has been inside the sensors field of view whereas \enquote{5} the train has never been inside the field of view. This makes sure that the kalman filter does not start acting when the sensors has not seen anything yet, but keeps trying to find the train if it has already been in the sensors field of view.
+
+\begin{lstlisting}[style=customc, label={sensor_area}, caption={Areas outside and inside the field of view of the sensors}]
+#define CENTER  0
+#define RIGHT_1 1
+#define RIGHT_2 2
+#define RIGHT_3 3
+#define RIGHT_4 4
+#define UNKNOWN 5
+\end{lstlisting}
+
+The Kalman filter may start due to initial background noise, which should be handled as faulty readings. To handle this problem a counter is used to make sure it is not background noise, 10 successive readings other than \emph{UNKNOWN} are required, this is implemented as seen in \cref{Kalman_start}. 
+%In \cref{Kalman_start} a counter is used for the purpose of filtering out noise before starting the Kalman filter. This ensures that the Kalman filter does not start due to initial background noise. A minimum of 10 successive readings, other than \emph{UNKNOWN}, are required before the readings are trusted, and the notion of a faulty reading is dropped.
+
+%In \cref{Kalman_start} a counter is used for the purpose of filtering out noise before starting kalman. This makes sure that the Kalman filter is not stated because the sensors get one reading which indicates something is in the field of view. At least \enquote{10} readings where a target is inside the field of view is needed before we trust that the sensors have in fact spotted the target and not made some faulty reading.
+
+\begin{lstlisting}[style=customc, label={Kalman_start}, caption={Start Kalman}]
+if(startCounter < 10 && prev != UNKNOWN)
+{
+    startCounter++;
+    prev = UNKNOWN;
+}
+\end{lstlisting}
+
+
+

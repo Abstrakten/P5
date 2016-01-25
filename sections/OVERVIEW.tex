@@ -1,7 +1,57 @@
-Diskussion: nævn sensorproblemer
+Diskussion
+future works
+konklusion
+platform choice (HARDWARE)
+Implementations rettelser
+Kalman design rettelser
 
+evt.
 
-% Preliminary design
-% Hardware (platform + sensor)
-% Design
+Test af c-funktionen kalman
+
 % Implementation
+
+
+Valg af tekno -> nxtOSEK (C & floatingpoints) + evt. scheduling
+OSEK = eneste realtidssystem (styre scheduling), C er hurtigt, floating point for præcision
+http://www.teamhassenplug.org/NXT/NXTSoftware.html
+
+Detection:
+
+counter++
+(custom-code af sensorhackfunction)
+
+
+Tracking:
+Kalman
+PID
+
+
+Shooting:
+PID
+cock
+Global variable (flyt)
+shotsfired++
+
+
+RTS:
+TASK-opdeling
+oil-filen
+Model opbygning
+
+
+Conclusion:
+er kravene opfyldt(problemformulering og krav)
+
+
+Discussion:
+Meta optimization
+sensor choice
+Tracking (recognition targets)
+scheduling
+shooting left/right
+offset
+automatisk afstand
+turret kan se flere stykker af trackket
+intelligente targets
+flere dimensioner i kalman/extended kalman/vores kalman er en lilleput kalman

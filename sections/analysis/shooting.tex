@@ -1,21 +1,40 @@
-\section{Shooting a Target}\label{sec:shooting}\label{\automlabel}
-For this project, the shooting part will be the launch of a Lego projectile, since it fits the scope of the project and sufficiently illustrates common problems with reactions. The turret which fires the projectile is described later in the report, in \cref{turret}.
+\section{Shooting a Target}\label{sec:shooting}
+For this project, the shooting part will be the launch of a projectile, which gives certain challenges when attempting to shoot a moving target. \\
 
-Certain factors have to be considered when firing projectiles at any given target. The most important factors are the velocity of both the target, and of the projectile, as well as the distance to the target, the accuracy of the projectiles and the turrets rate of fire. Another important factor is the predictability of the target, mostly in regards to the path which target will take. However, since this projects delimits itself to a tower defense scenario, a predictable path is assumed.
+Certain factors have to be considered when firing projectiles at any given target. The most important factors are the velocity of both the target, and of the projectile, as well as the distance to the target and the accuracy of the projectiles. Another important factor is the predictability of the target, mostly in regards to the path which the target will take. However, due to the delimitations to the tower defense scenario in this project, a predictable path is assumed. \\
 
-The projectile velocity, accuracy and rate of fire is covered in the testing of the constructed turret, see \cref{turret}, but some deductions can be made on the other factors alone.
+The properties of the tower that was eventually constructed will be covered in \cref{turret}, but some deductions can be made from the other factors alone.
 
-\subsection{Field of view}\label{FoW}
-As the target enters the field of view, the shooting system has a limited time to respond, which depends on how fast the target is moving. A faster target will leave the field of view quicker, providing a shorter time frame for the projectile to hit the target. In this regard a faster target can therefore be interpreted as a smaller target. If we assume a degree of freedom in the distance from the target, we can increase the time a target spends in the field of view at the cost of increasing the travel time of the projectile to the target.\\
+\subsection{Field of View}\label{FoW}
+As the target enters the field of view, the shooting system has a limited time to respond, where the time available depends on the speed of the target. A faster target will leave the field of view quicker, providing a shorter time frame for the projectile to hit the target. If a degree of freedom is assumed in the distance between a tower and a target, the time that target spends in the field of view can be increased at the cost of increasing the travel time of the projectile.\\
 
-The distance from a tower to a given target inside its observable area, is not likely to be constant. In fact this is only the case when the target follows a path which curves in parallel to the tower. Assuming a straight path parallel to a tangent of the towers field of view, the distance to the target will increase exponentially in relation to the distance between the target and the tangents point of contact. This fact, in relation to velocity of the projectile, limits the maximum distance to the target, and such the effective observable area. \addtodo{Kasper}{Lidt fovirrende, overvej grafik}
+The distance from a tower to a given target inside its observable area, is not likely to be constant. In fact this is only the case when the target follows a path which curves in parallel to the tower. Assuming a straight path parallel to a tangent of a towers field of view, the distance to a target will increase in relation to the distance between that target and the tangent's point of contact. This fact, in relation to the velocity of the projectile, limits the maximum distance to the target, and as such also the effective observable area. This can be seen in \cref{25} where $a$ shows the shortest distance to the track, $b$ shows the maximum shooting distance and $c$ shows a distance out of reach. This shows that as $a$ shortens, the effective range increases, but never more than the range of $b$. On the other hand, increasing the field of view by extending $a$, happens at the cost of a diminished observable area.
 
-The limit on the time a target spends in the effective range of a tower, also adds a requirement of time to the task of acquiring a target and releasing a projectile. If targets require multiple hits before being eliminated, which is the case in classical tower defense games, this will further increase the emphasis on time, since the faster the first projectile is fired, the sooner it will eliminate a target. However, for the purpose of a game, this could be considered a part of the challenge of managing your tower resources. So a tower should not nessesarily have the faster possible reaction, but rather a consistent one. 
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}
 
-\subsection{Trajectory Prediction}\label{sec:motionprediction}\label{\automlabel}
-When firing projectiles one must consider the correlation between the ratio of the projectile speed to the distance to the target, and the time it takes for the target to travel its own length. If for example the distance is 1 meter, and the projectile velocity is 1 meter per second, a target that moves faster than its own length in a second will not be hit by a projectile launched directly at the target. If we assume a passing target to move at a pace sufficiently high, that the turret can not successfully hit the target by firing immediately upon detection, it becomes necessary to be able to predict the movement of the target, and fire the projectile a distance in front of target.\\
+   \draw [dashed] (3,0) arc (0:180:4cm);
+   \draw [thick](-5,3) -- (3,3);
+   \draw [-triangle 90,fill=black](-1,0) -- node[left] {a} (-1,3);
+   \draw [-triangle 90,fill=black](-1,0) -- node[left] {b} (0.8,3.6);
+   \draw [-triangle 90,fill=black](-1,0) -- node[left] {c} (3,3);
+   %\draw (-0.9,2.8) -- (-1.1,2.8) --(-1,3) -- (-0.9,2.8);
 
-In summation, the process of firing a projectile is a time sensitive task, in regards to both how long the target is in the effective range of the turret, how fast a projectile can be released, and how fast a prediction of the trajectory must be made.
+\end{tikzpicture}
+\end{center}
+\caption{Illustration of the effective observable area}
+\label{25}
+\end{figure}
+\smallskip
+
+The limit on the time a target spends in the effective range of a tower, also adds a requirement of time to the task of acquiring a target and releasing a projectile. If targets require multiple hits before being eliminated, which is the case in classical tower defense games, this will further increase the emphasis on time, since the faster the projectiles are fired, the sooner that target will be eliminated. However, for the purpose of a game, this could be considered a part of the challenge of managing your tower resources. So a tower should not necessarily have the fastest possible reaction, but rather a consistent one. 
+
+\subsection{Trajectory Prediction}\label{sec:motionprediction}
+When firing projectiles the correlation between the ratio of the projectiles travel time, and the time it takes for the target to travel its own length, must be considered. If for example the distance is one meter, and the projectile velocity is one meter per second, a target that moves faster than its own length in a second, will not be hit by a projectile launched directly at the target. If we assume a passing target to move at a pace sufficiently high, such that a tower can not successfully hit the target by firing immediately upon detection, it becomes necessary to be able to predict the movement of the target, and fire the projectile a distance in front of target.\\
+
+In summation, the process of firing a projectile is a time sensitive task, in regards to both how long the target is in the effective range of the tower, how fast a projectile can be released, and how fast a prediction of the trajectory can be made.
+\bigskip
 
 
 

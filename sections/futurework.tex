@@ -1,0 +1,25 @@
+\chapter{Future Work}\label{ch:futurework}
+This chapter will cover ideas for work to be done in the future, either short or long term. The purpose is to give insight into the thoughts about the future that undoubtedly had an effect on the design, however small or large it might have been.
+%%% formulering
+\section{Communicating Targets}
+Having targets that actively communicate with the turret could be considered as an addition to the physical adaption of a tower defense game. By letting the targets constantly broadcast their positions to the turret, a more refined detection method could be implemented. It would then be possible for the turret to detect targets without them having to pass in front of the turret, along with it being able to identify the position of multiple targets simultaneously. \\
+
+It could also result in targets being detected before entering the observable area, allowing for better tracking as the turret could analyze the target's movement before entering this area. This would, however, pose a challenge, as the turret must be able to determine its own position relative to the positions it receives from the targets. This challenge is described by the simultaneous localization and mapping (SLAM) problem~\cite{SLAM}. This could also allow for easier re-arranging of towers. \\
+
+It would also be possible to equip the targets with means of registering whether they have been hit by a projectile from a tower, and this information could then be communicated to that tower. This way the tower would be able to ignore targets that have already been hit, and evaluate its performance in hitting targets. It would also make it possible to train a tower's tracking model, making it better at tracking targets. \\
+
+If the targets are considered too predictable, providing them with a level of intelligence could add a layer of variation to the game. This could manifest in different abilities, such as targets changing speeds while moving, changing behavior when hit, or maybe letting them navigate through multiple possible paths. This could create the illusion that the towers have an indirect effect on the targets, such as slowing or completely halting them for a few seconds, but it could also provide a greater challenge for the towers as they would have to cooperate in order to achieve the best results.
+
+
+\section{Game Mechanics}
+In order to create an actual physical tower defense game, the game mechanics from this implementation would have to be changed such that towers and targets are not as limited. First, a working tower should not be confined to just reacting to targets coming from one direction. While targets can always be expected to move from one end of the track to another, it would be quite limiting to only have a tower working while standing on the correct side of the track. Second, a tower should not be constricted to only working at one set distance, but instead it should function within a specific range. \\
+
+It should also be possible to place towers in or around corners of the track, as well as places where a tower should be able to see the target passing by multiple times, such as U-turns, or hairpin curves. Features which allow these obstacles would possibly require some user input or at least some calibration in order to work properly, however, they still represent important parts of what makes room for creative strategic thinking in the game.
+
+\section{Target Demographic}
+%JA DER SKAL STÅ LIGHTING, IKKE LIGHTNING
+Further development can move in different directions based on the target demographic. If the product is intended as a toy, work on the vulnerability to disturbances becomes a greater focus. This could warrant work on better ways of handling environments like living rooms, which could include different lighting, distances or non-target objects, such as other towers or people. The product would likely be directed towards finding a better general solution.
+
+If instead model builders were chosen as the target demographic, a more controlled environment could be expected. It would also be possible to leave the final calibration to the customer, as they are used to doing final constructions themselves, which would allow for a more tailored result, as opposed to a standard calibration for the general case.
+
+%It also would not be unreasonable to expect a higher pricing point for model builders, which in turn would allow for more expensive hardware. Keeping with this train of thought, model builders are an exciting demographic when it comes to autonomous systems.

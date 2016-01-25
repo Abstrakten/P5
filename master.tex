@@ -4,6 +4,7 @@
 \pagestyle{\ifDRAFT fancy\else empty\fi} % if draft enable headers else disable
 \pagenumbering{roman}
   %\listoffixmes
+ \setlength{\parindent}{0pt}
   \include{sections/frontpage}
   \include{sections/colophon}
 
@@ -11,12 +12,25 @@
   \include{sections/titlepage}
 	\blankpage
 	\include{sections/preface}
-  \pdfbookmark[0]{\contentsname}{label:Contents}
-  \setcounter{tocdepth}{2}
-	\pagestyle{empty}
-\pagenumbering{gobble}
+ \pdfbookmark[0]{\contentsname}{label:Contents}
+ \setcounter{tocdepth}{2}
+	%\pagestyle{empty}
+	%\pagenumbering{gobble}
+	%\afterpage{\emptypage}
   \tableofcontents
-  
+  %\pagenumbering{roman}
+	\begingroup
+  \listoffigures
+  \bigskip
+  \bigskip
+  \bigskip
+  \bigskip
+  \let\clearpage\relax
+  \listoftables
+  \lstlistoflistings
+  \addcontentsline{toc}{chapter}{\lstlistlistingname}
+  \endgroup
+	\clearpage
   \cleardoublepage
   \pagestyle{fancy}	 
   \pagenumbering{arabic}
@@ -30,17 +44,19 @@
   \input{sections/design/intro.tex}
   \input{sections/implementation/intro.tex}
   \input{sections/test/intro.tex}
-  \input{sections/evaluation/intro.tex}
+  \input{sections/discussion.tex}
+  \input{sections/conclusion.tex}
+  \input{sections/futurework.tex}
     \ifDRAFT
     \input{sections/todonotes.tex}
     \fi
   %
-  \listoffigures
-  \begingroup
-  \let\clearpage\relax
-  \listoftables
-  \endgroup
-	\clearpage
+  %\listoffigures
+  %\begingroup
+  %\let\clearpage\relax
+  %\listoftables
+  %\endgroup
+	%\clearpage
 	%\pagestyle{BasicStyle}
   
 

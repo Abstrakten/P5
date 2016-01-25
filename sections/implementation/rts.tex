@@ -1,11 +1,13 @@
-\section{RTS Analysis}
-%intro og tabel over tasks
+\section{Task Structure}\label{sec:impl_tasks}
+The chosen RTOS was nxtOSEK, as described in \cref{osek}. nxtOSEK is based on the operating system specification OSEK/VDX \cite{OSEK}. The OSEK open standard defines a uniform way of describing OSEK specific objects, such as tasks and alarms, called OSEK implementation language (OIL) \cite{OSEK}. Release times are defined as clock alarms, which are used to activate tasks at a certain release time, or a time relative to another alarm. The release times are specified in counter tics, which is a time unit determined by the application programmer. These tics are defined as an amount of milliseconds, and in this project the tics are set to to one millisecond. This lets the release time of tasks to be defined as integers. By decreasing the amount of clock cycles, it is possible to have lower and more accurate release times, but this increases the amount of clock interrupts. \\
 
-\subsection{Utilisation Analysis}
-%selvsigende
+The program has been divided into four tasks: \emph{BackgroundTask}, \emph{KalmanTask}, \emph{WeaponSystemTask}, and \emph{ShootingTask}. Each of these tasks has a specified period and priority, from one to four, specifying the lowest to highest priority, respectively. The period of a task specifies how often the task is released, while the priority determines which tasks are allowed to preempt others. \\
 
-\subsection{Worst-case Response Time Analysis}
-%selvsigende
+\emph{BackgroundTask} is a background task, which handles resetting the turret after a shot has been fired. It has the lowest priority of all the tasks, and is only running if no other tasks are ready. As such this task does not require a specified period. \\
 
-\subsection{Model Check}
-%gant chart, modelen, forklaring på hvordan den virker
+The second task is the \emph{KalmanTask}, which is responsible for running the Kalman filter. In order to gain a accurate estimate of targets state, it is desirable to run the Kalman filter as frequently as possible. As described in \cref{pollingrate} the IR sensors can be polled with a frequency of 6 milliseconds, but in order to allow easier scheduling, the task will have a period of 10 milliseconds, and therefore also the highest priority of four. After the turret has fired a shot, \emph{BackgroundTask} will disable the \emph{KalmanTask}, which will not run again before \emph{BackgroundTask} is done resetting the turret. \\
+
+\emph{WeaponSystemTask} is responsible for rotating the motors for the weapon system, which is done using a global variable \emph{WSRotation}, which is altered by the \emph{fire} function. This task has a period of 20 milliseconds, as the PID controller is designed to run at this frequency. This task has a priority of two, making it the second lowest priority. \\
+
+Finally, \emph{ShootingTask} is responsible for checking whether the turret is ready to shoot. This task has a period of 20 milliseconds, and has the priority of three, making it the second highest priority.
+

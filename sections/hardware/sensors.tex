@@ -1,93 +1,166 @@
-\section{Sensors}\label{sec:sensors}\label{\automlabel}
-The system will have to track and hit a moving target, a LEGO train. Given the nature of the project the following sensors can be used to perform this task: the LEGO NXT Ultrasonic Sensor \cite{legoultrasonic} and the Mindsensors High Precision Medium Range Infrared Distance Sensor \cite{mindinfrared}. These sensors are designed for detecting movement and measuring distance at ranges from 10 - 100 centimeters according to their specifications. There is limited documentation detailing the specifications of these sensors available. Tests, which are described in the following sections, will be carried out to determine the range at which the sensors work best and to estimate their levels of inaccuracy. The accuracy of the sensors is important as they're used to determine the position of the target and irregularities in the distance readings can cause the system to be unable to track the target properly and would require compensation. \\
-\eal
+\section{Sensors}\label{sec:sensors}
+The system will have to track and hit a moving target. Based on the analysis and the chosen platform, two different sensor types will be considered: the LEGO NXT Ultrasonic Sensor \cite{legoultrasonic} and the Mindsensors High Precision Medium Range Infrared Distance Sensor \cite{mindinfrared}. These sensors will be tested in order determine their condition and behavior, and to estimate their accuracy. The accuracy of the sensors is important as they are used to determine the position of the target, and irregularities in the readings can cause the system to be inaccurate when tracking the target.
 
-\subsection{The Setup}
-To generate useful test results the testing setup will have to remain the same throughout all the tests.
-The setup is split into the target and the tracking system. The target is a LEGO train which travels along a set of LEGO train tracks. The track has a height of 1 centimeter and a width of 4.2 centimeters. In the first test scenario the tracking system consists of two ultrasonic sensors mounted on a tower built with LEGO bricks. In the second test scenario two infrared sensors are mounted on the tower. 
+
+\subsection{Sensor Test Setup}\label{senstest}
+To generate useful and comparable test results the testing setup will remain similar throughout all the tests. The setup consist of both the target and the tower. The testing setup was as follows:
+
+
+%In the first test scenario the setup consists of two ultrasonic sensors mounted on a tower built with LEGO bricks. In the second test scenario two infrared sensors are mounted on the tower.
 
 \begin{itemize}
-\item The ultrasonic sensors are mounted on the turret, 16.5 centimeters above the ground.
-\item The infrared sensors are mounted on the turret, 12 centimeters above the ground.
+\item The target is a LEGO train with a white surface, a width of 17.8 centimeters, and a height of 17.2 centimeters.
+\item The target is traveling on a track with a height of one centimeter, and a width of 4.2 centimeters.
+\item The ultrasonic sensors are mounted on the tower, 16.5 centimeters above the ground.
+\item The infrared sensors are mounted on the tower, 12 centimeters above the ground.
+\item The ultrasonic sensors are located 45 centimeters away from the target.
+\item The infrared sensors are located 36 centimeters away from the target.
+\item Sensors in pairs are placed with a distance of four centimeters between them.
 \end{itemize}
 
-In both scenarios there are 4 centimeters between the two sensors. The sensors are located 45 centimeters away from the track. The difference in sensor height between the two scenarios has no impact on the recorded data. \\
+The difference in distance to the target between the two sensor types is due to optimal measurement distance of the infrared sensors being 10 to 40 centimeters \cite{minduserguide}. The variation in height stems from the different sensor designs which means the infrared sensors have to be mounted differently, in a lower position. Observations showed that this difference in sensor height between the two scenarios, had no impact on the recorded data. \\
 
-The tracking system can operate in two modes: stationary mode and sweep mode. In stationary mode the tracking system does not move in any way and remains pointing in the same direction. In sweep mode the tracking system will turn left and right continuously. \\
+The sensors are first tested individually to ensure they are in working condition, and to determine their accuracy, then in pairs, as additional sensors will provide additional reference points, and thereby more information, as described in \cref{predesign:tracking}, which might be useful. The sensors are tested in both stationary mode, where the tower does not move in any way and remains pointing in the same direction, and in a sweeping mode, where the tower continuously alternates between turning left and right, between two specified boundaries. The purpose of this sweep mode is to simulate the movement of the tower tracking a target. \\
 
-The data obtained from the tests will be presented in the form of a graph. The graph will contain the readings from the tested sensor(s) and the position of the motor used to rotate the tracking system. The sensor data will be displayed with blue and green lines. These lines indicate the distance in centimeters to the target spotted by the sensors. The red line represents the motors revolutions in degrees. When this line has a y-value of 0, the sensors are pointing straight forward. The positive and negative values indicate that the tracking system has rotated either left or right.
+The data obtained from the tests will be presented in the form of a graph. The graph will contain the readings from the tested sensor, or sensors, and the position of the motor used to rotate the tracking system. The sensor data will be displayed with blue and green lines, which indicate their measured distance in centimeters and millimeters. The red line represents the motor's rotation in degrees. When this line has a y-value of zero, the sensors are pointing straight forward. Positive and negative values indicate a right or left rotation, respectively.
 
-\subsection{LEGO NXT Ultrasonic Sensor}\label{ss:ultrasonic}\label{\automlabel}
-The ultrasonic sensor measures distance by sending out a sound wave and then calculating the time it takes for the sound wave to hit an object and return. According to the specifications the sensor works from a distance of 0 to 250 centimeters with a precision of $\pm$ 3 centimeters \cite[p. 29]{legonxtdata}. The ultrasonic sensor does not have any range settings that can be adjusted. The specifications note that the use of multiple ultrasonic sensors may interfere with the readings. \\
+\subsection{LEGO NXT Ultrasonic Sensor}\label{ss:ultrasonic}
+The ultrasonic sensor measures distance by sending out a sound wave, and then calculating the time it takes for the sound wave to hit an object and return \cite[p. 29]{legonxtdata}. According to the specifications the sensor works from a distance of 0 to 250 centimeters with a precision of $\pm$ 3 centimeters \cite[p. 29]{legonxtdata}. The specifications note that the use of multiple ultrasonic sensors may interfere with the readings \cite[p. 29]{legonxtdata}. The ultrasonic sensor has a field of view of approximately 30 degrees \cite{ultraangle}. \\
 
-A custom cover has been manufactured for the ultrasonic sensor. The purpose of this cover is to minimize the field of view of the sensor such that it doesn't register objects other than the intended target. A side-by-side comparison of the sensor with and without the cover can be seen in \cref{senscover1}. Tests without the cover showed that the sensor spotted the tracks resulting in inaccurate distance readings. The only tests described in detail are those performed with covers to avoid the detection of the tracks.
+The first tests showed that the ultrasonic sensor registered the tracks resulting in inaccurate distance readings, due to their large field of view. To counteract this property, a custom cover was 3D printed for the ultrasonic sensor. The purpose of this cover is to minimize the field of view of the sensor, such that it does not register objects other than the intended target. A side-by-side comparison of the sensor with and without the cover can be seen in \cref{senscover1}. The only tests described in detail are those performed with covers.
 
-\imgresize{figures/senscover1.png}{The LEGO NXT Ultrasonic Sensor with (right) and without (left) the custom cover.}{senscover1}
+\imgresize{figures/senscover1.png}{The LEGO NXT Ultrasonic Sensor without (left) and with (right) the custom cover.}{senscover1}
 \vspace{0.01pt}
 
 \subsubsection{Single Sensor}\label{singlesensorult}
-A single sensor is tested in order to determine the accuracy of the sensor while the turret upon which it is mounted is stationary. Using a single sensor it is not possible to accurately determine the position of the target as there is no intersection as there would be when using two sensors.
+The sensors are tested individually in order to determine the accuracy and condition of the sensors. The sensors were tested in a stationary position, with the target also being stationary, in order to determine whether or not they were capable of producing accurate and consistent distance readings. The result of this test can be seen in \cref{1sensorstat}. As the sensors performed identically, only one result is shown. The distance measured by the sensors was within three centimeters of the actual distance to the target. \\
 
-\paragraph{Without cover} ~\\
-At first the single sensor was tested without a custom cover mounted. The tests results showed that the tracks were within its field of view resulting in inaccurate distance readings. As a result of this the custom cover will be used in all subsequent tests.
+\input{sections/graphs/1sensor-stationary.tex}
 
-\paragraph{With cover} ~\\
-The sensor was tested in a stationary position with the target also being stationary in order to determine whether or not it was capable of producing an accurate and consistent distance reading. The result of this test can be seen in \cref{1sensorstat} in \cref{ch:appendixA}. The distance measured by the sensor was within 3 centimeters of the actual distance to the target.
 
 \subsubsection{Multiple Sensors}
-The tracking method requires the use of two sensors, as mentioned in \addtodo{Mathias}{Add reference}, to accurately determine the position, not just the distance, of the target by using the intersection between the two. The 2-sensor setup is tested both with the turret in stationary mode and sweep mode.
+\label{MultiSensor}
+Tracking using the ultrasonic sensors can be simplified using multiple sensors, as described in \cref{predesign:tracking}. The two-sensor setup is tested with the tower in both stationary and sweep mode.
 
 \paragraph{Stationary} ~\\
-With the target standing still directly in front of the turret in stationary mode the two ultrasonic sensors interfere with each other, creating small irregularities in the distance readings. These interferences can be seen in \cref{2sensorstat}. The blue and green lines should both be straight as seen in \cref{1sensorstat}. \\
+With the target standing still directly in front of the tower in stationary mode the two ultrasonic sensors interfere with each other, creating small irregularities in the distance readings. These interferences can be seen in \cref{2sensorstat}. The blue and green lines should both be straight as seen in \cref{1sensorstat}. \\
 
 \input{sections/graphs/2sensors-stationary.tex}
 \vspace{0.5pt}
+
 \paragraph{Sweeping} ~\\
-\Cref{2sensorsweep} shows the results from the test with the turret in sweep mode with two sensors mounted. Once again the two sensors interfere with each other. At times a sensor also sees the target longer than it should - this issue may be caused by it catching the reflected sound wave from the other sensor. The reflected sound wave may also behave irregularly if it hits the target at an angle causing the sound wave to be reflected in a different direction than the one it came from. These inaccurate readings can result in the turret being unable to properly track the target as the target may be in a different position than the one reported by the sensors. Furthermore, if the two sensors cannot produce accurate readings their field of view intersection may be shifted from the center in front of the turret.
+\Cref{2sensorsweep} shows the results from the test with the tower in sweep mode with two sensors mounted. Once again the two sensors interfere with each other. At times a sensor also sees the target for a longer time period than it should - this issue may be caused by it catching the reflected sound wave from the other sensor. The reflected sound wave may also behave unexpectedly if it hits the target at an angle, causing the sound wave to be reflected in a different direction than it originated from~\cite{sound_reflection}. These inaccurate readings can result in the tower being unable to properly track the target, as the target may actually be in a different position than the one reported by the sensors. 
 
 \input{sections/graphs/2sensors-sweep.tex}
-\eal
+\medskip
 
-\subsection{Mindsensors High Precision Infrared Distance Sensor}\label{ss:minddist}\label{\automlabel}
-The infrared (IR) distance sensor from mindsensors measures distance based on the angle of the arriving reflected IR light it emits \cite{minddata}. The sensor exists in three different variants that determine the optimal range of the sensor: short, medium and long. See \cref{mindsensorranges} for the distances supported by each variant. The medium range variants are the most suited for this project and they are also provided by Aalborg University. 
+\subsection{Mindsensors High Precision Infrared Distance Sensor} \label{ss:minddist}
+The infrared (IR) distance sensor from mindsensors measures distance based on the angle of the arriving reflected IR light it emits \cite{minddata}. The sensor exists in three different variants, short, medium, and long, with different optimal ranges, shown in \cref{mindsensorranges}. The medium range variants are provided by Aalborg University, and has a range suitable for this project. One of the infrared sensors can be seen in \cref{infsensor1}.
 
-The sensors do not work on objects that do not reflect IR light. The IR sensors measure distance in millimeters. 
+\imgscale{figures/infraredsensor.png}{An infrared sensor from mindsensors}{infsensor1}{0.4}
+
+The precision of these sensors can be impaired when used in surroundings with high amounts of ambient light, and by surfaces that reflects light poorly~\cite{minddata}. The IR sensors measure distance in millimeters. According to the datasheet, the infrared sensor has a field of view spanning 12 centimeters when it is located 80 centimeters away from the target \cite{mindangle}. \\
 
 \input{sections/tables/mindsensor/mindsensorranges.tex}
 
-It was not necessary to manufacture a custom cover for the infrared sensors as their field of view was small enough to avoid detecting objects other than the intended target. One of the infrared sensors can be seen in \cref{infsensor1}.
+\subsubsection{Faulty Sensor}
+Again each sensor was tested individually, in order to determine their accuracy and condition. When testing these sensors, it was discovered that one of them was faulty, constantly measuring a distance of 9999 millimeters. As only two of this sensor type were available through Aalborg University, replacing it was not a feasible option, and instead further testing was performed, in an attempt to identify the error, and determine whether it could be mended. \\
 
-\imgscale{figures/infraredsensor.png}{An infrared sensor from mindsensors}{infsensor1}{0.5}
+In order to specify the origin of the fault, the architecture of the sensor was examined. A graphical representation of the internal communication of an IR sensor, along with its communication with the NXT brick is shown in \cref{fig:hwArc}.
 
-\subsubsection{Single Sensor}
-A test with a single infrared sensor is performed in order to determine how accurate it is both while the tower remains stationary and is in sweep mode. Two infrared sensors are required to use the field of view intersection to accurately locate a target, using a single sensor it is only possible to measure the distance.
+\begin{figure}[H]
+\begin{center}
+\begin{tikzpicture}
 
-\paragraph{Broken sensor} ~\\
-Two medium range infrared sensors were provided by Aalborg University. Upon testing the two sensors it was discovered that one of them was faulty. During the testing it constantly returned a distance reading of 9999 millimeters. A debugging of the sensor found that the converter which converts voltage to distance had broken. A program that displays the voltage reading of the sensor was then created and uploaded to the NXT. Following this the voltage reading for each distance between 80 and 800 millimeters in intervals of 20 millimeters was noted. The collected data can be seen in \cref{brokensensor}. 
+    \draw (0,8) -- (1,8) -- (1,7) -- (0,7) -- (0,8);
+    
+    \node at (0.5,7.5) {S};
+    
+    \draw [-triangle 90,fill=black](0.5,7) --  (0.5,2);
+    
+    \draw (0.7,7) -- (0.7,4);
+    
+    \draw [-triangle 90,fill=black](0.7,4) -- (1.5,4);
+
+    \draw (0,2) -- (2,2) -- (2,1) -- (0,1) -- (0,2);
+    \node at (1,1.5) {I$^2$C slave};
+    
+    %table
+    \draw (1.5,5) -- (3.4,5) -- (3.4,3) -- (1.5,3) -- (1.5,5);
+    \draw (1.5,4.5) -- (3.4,4.5);
+    \draw (1.5,4.15) -- (3.4,4.15);
+    \draw (1.5,3.8) -- (3.4,3.8);
+    \draw [dotted, line width=1pt](2.50,3.6) -- (2.50,3.2);
+    \node at (2.4,4.7) {Converter};
+    
+    \draw [-triangle 90,fill=black](1.7,3) -- (1.7,2);
+    
+    \draw [triangle 90-triangle 90,fill=green, color=blue](2,1.5) -- (4,1.5);
+    
+    \draw (4,2) -- (6,2) -- (6,1) -- (4,1) -- (4,2);
+    \node at (5,1.5) {I$^2$C master};
+    
+    \draw [triangle 90 -triangle 90,fill=black](5,2) -- (5,3);
+    
+    \draw (4,4) -- (6,4) -- (6,3) -- (4,3) -- (4,4);
+    \node at (5,3.5) {ARM/CPU};
+
+\end{tikzpicture}
+\end{center}
+\caption{Sensor architecture and NXT communication}
+\label{fig:hwArc}
+\end{figure}
+
+The blue arrow indicates communication between the infrared sensor on the left side, and the main processor in the NXT brick on the right side. The sensor denoted as $S$ on \cref{fig:hwArc} measures the voltage of reflected IR light, then uses a conversion table to map this voltage to a distance in millimeters. As shown on \cref{fig:hwArc} both the voltage value, and the converted distance value, are stored in I$^2$C registers. In order to examine whether the fault was within the sensor module itself, the voltage reading was read directly. This examination showed that the voltage reading was not constant, and thus the fault could be contributed to a fault in the conversion table. It was determined that this sensor could then still be usable, circumventing the fault by reading the voltage directly, and implementing a new conversion system on the NXT brick. \\
+
+In order to implement this new conversion system, the voltage reading for each distance between 80 and 800 millimeters, in 20 millimeter intervals, was recorded, the results of which can be seen in \cref{brokensensor}. 
 
 \input{sections/graphs/brokensensor.tex}
 
-Based on the collected data four power functions were created, each describing a part of the graph seen in \cref{brokensensor}. These functions were then implemented such that the sensor uses them to convert the voltage to distance - the power function used depends on the voltage reading. \\
+Based on these measurements, a power function that approximates the data was identified. This function acts as the base of the new conversion system, taking a voltage reading as input, and then returning a distance in millimeters. While the internal conversion table was calibrated according to general data from a new sensor, shown on \cref{fig:internal_conversion} in \cref{ap:internal_conversion} for comparison, this new conversion function is calibrated to this exact sensor and target, resulting in more precise distance readings, than a working internal conversion table would have afforded. \\
+%The new conversion system are based on a power function taking voltage as input and returning distance in millimeter. The internal conversion table used described measured distance and voltage values to map from voltage to distance. The power function does not use described values and therefor can calculate more precise distances between two described values of the conversion table.
 
-After implementing this voltage to distance converter a quick test was performed to compare the previously broken sensor to a working, untouched sensor. The fixed sensor proved to be just as accurate, if not more, than the sensor which hadn't been modified.
+Furthermore, the possibly greatest benefit of using the custom conversion function on the NXT, is the possibility of increasing the sampling rate of the distance measurements down to every 6th millisecond, compared to using the internal conversion table's 39 milliseconds. This is possible due to the voltage register of the I$^2$C controller being updated more frequently than the distance register.\label{pollingrate} \\
 
-\paragraph{Sensor test} ~\\
-The single sensor test was performed using the modified sensor as it is just as accurate as the unmodified sensor. The purpose of the test is to determine the accuracy of the sensor while the turret is in stationary mode. \\
+As the custom conversion function provided substantial benefits over using the internal conversion, it was decided to construct a custom conversion function for the other infrared sensor as well, which was done using the same process. The data used in constructing the conversion function for this sensor can be seen in \cref{brokensensor2}, \cref{ap:sensorgraph}. \\
 
-Both the turret and the target were stationary for this test. The result of this test can be seen in \cref{1diststat} in \cref{ch:appendixB}. The distance measured by the sensor was within \addtodo{Mathias}{Add distance} centimeters of the actual distance to the target.
+The power functions follows the same general form, given by $f(x) = a/x^b$, where $x$ denotes the voltage reading, and $a$ and $b$ are constants based on a nonlinear regression analysis on the recorded measurements. 
+
+
+\subsubsection{Single Sensor}
+After implementing the custom conversion functions, the individual sensor tests were performed. Both the tower and the target were stationary for these tests. The result of the test of the faulty sensor can be seen in \cref{1diststat}. The distance measured by the sensor was within three centimeters of the actual distance to the target. The other IR sensor performed very similarly, and as such the results of this test are not shown.
+
+\input{sections/graphs/1dist-stationary.tex}
 
 \subsubsection{Multiple Sensors}
-When using the infrared sensors it is still necessary to use two in order to determine the position of the target. The two sensors are mounted on the turret and are tested in both stationary mode and sweeping mode.
+When using the infrared sensors for tracking, it is favorable to use multiple sensors as well, see \cref{predesign:tracking}. The two sensors are mounted on the tower, and are tested in both stationary and sweeping mode. As the custom conversion function outperformed the native function, both sensors use the custom function.
 
 \paragraph{Stationary} ~\\
-The two infrared sensors do not interfere with each other when the target is stationary directly in front of the turret. There are small differences in the accuracy of the two sensors which are the cause of the small distance deviations. The data collected from the test can be seen in \cref{2diststat}.
+The two infrared sensors do not interfere noticeably with each other when the target is stationary directly in front of the tower. The data collected from the test can be seen in \cref{2diststat}. 
 
 \input{sections/graphs/2dist-stationary.tex}
 
 \paragraph{Sweeping} ~\\
-The results from the test with the turret in sweep mode with two infrared sensors mounted can be seen in \cref{2distsweep}. 
+The results from the test with the IR sensors, and the tower in sweep mode, can be seen in \cref{2distsweep}. Here the distance readings are not very accurate. However, while the distance readings are not accurate, the sensors are still able to detect a change in the distance rather accurately. There are also minor overlaps in the readings from the two sensors, which indicates that both sensors have detected the target. 
 
-\addtodo{Mathias/Alex}{Perform tests, fix stationary graph}
+\input{sections/graphs/2dist-sweep.tex}
+
+\subsubsection{Sensor Cone}\label{cone}
+As seen in \cref{2distsweep} some irregularities exist. In order to gain a better understanding of these irregularities, a test of the accuracy of the infrared throughout their cones was also performed. In this test the tower was stationary, while a target was passing by. The resulting measurements are shown in \cref{senscone}. The distance measured by the infrared sensors vary greatly depending on where in the cone the target was. These tests also show that the distance measurements of the infrared sensors are imprecise in the majority of their cones. 
+
+\input{sections/graphs/sensorcone.tex}
+
+\subsection{Choice of Sensors}\label{bestchoice}
+When multiple sensors are used, the ultrasonic sensors' measurements are subject to interference, which makes the measurements unreliable. This was noted in the sensor specifications and was also confirmed during the tests. The unreliability of the interference makes this sensor type unsuitable for this project.  \\
+
+While the infrared sensors have imprecise measurements, these imprecisions follow a specific pattern, and can subsequently be used as additional information about where in the sensors cone a target is located. Additionally, the infrared sensors' measurements are not subject to any noticeable interference when using multiple sensors. Consequently, the infrared sensors are considered a better option.
 
 
-\eal
+
+
+
+
+
+
+
+

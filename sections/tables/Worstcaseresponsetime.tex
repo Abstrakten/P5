@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\setlength\extrarowheight{3pt}
+\begin{tabulary}{\textwidth}{|C|C|C|C|C|}
+\hline
+\textbf{Task} & \textbf{WCET} & \textbf{Period} & \textbf{Priority} &  \textbf{WCRT} \\ 
+\hline
+BackgroundTask            &                           &        & 4        &                          \\
+\hline
+KalmanTask                & 5 ms                      & 10 ms  & 1        & 5 ms                     \\
+\hline
+WeaponSystemTask          & 3 ms                      & 20 ms  & 3        & 9 ms                     \\
+\hline
+ShootingTask              & 1 ms                      & 20 ms  & 2        & 6 ms                     \\
+\hline
+\end{tabulary}
+\caption{Worst-case response times.}
+\label{Worstcaseresponsetime}
+\end{table}
+\FloatBarrier

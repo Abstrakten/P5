@@ -1,0 +1,10 @@
+\section{Detection}\label{sec:registering}
+An unavoidable task when creating a tower, is to enable it to detect objects in the observable area. The observable area is the entire area in which a given tower can possibly detect a target. This can be done with a wide range of sensors and techniques. However, just registering that an object is in the observable area is rarely enough, and as such, additional information is required. Firstly there is the matter of distinguishing between a target and a non-target. Considering the delimitation of the LEGO train, an example of a non-target could be the tracks which the train runs on. Therefore some identifying properties of a target, must be defined. A target must always be:
+
+\begin{enumerate}
+\item Moving along a track inside the observable area.
+\item Visually distinguishable from non-targets. 
+\end{enumerate}
+
+Detecting a target in the observable area will require monitoring of said area. The direct approach is to constantly cover the entire observable area, but a tower might not have such a large field of view. Field of view is defined as the area a tower can observe at a given moment. If complete constant coverage is not a viable solution, sensors can either watch key points in the area, or have their field of view moved around the observable area in some manner.\label{observableArea}
+

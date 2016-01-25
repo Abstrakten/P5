@@ -1,9 +1,22 @@
 \chapter{Design}\label{ch:design}
-\addtodo{Someone}{Write an introduction to this chapter}
-With the analyse done, the design decisions for the turret will be made. This chapter are going to contrain the decisions and arguments for them.
+This chapter will describe and explain the design of the turret, the PID controller, the detection system, the tracking system, shooting system, as well the reasoning behind them. The design is based upon the requirements in \cref{sec:requirements} and the possible solutions presented in \cref{ch:preldesign}, delimited by the hardware analysis in \cref{ch:hardware}. From this point onwards, \emph{turret} will refer to the tower described in \cref{turret}.
+
+%The design will describe the solution which is to be implemented, but will not be directly aimed at the actual implementation of the solution.
+
+%The design will describe the solution which is to be implemented, but will not directly address the actual implementation of the solution.
+
+%The design will describe the solution which is to be implemented, but will not be directly aimed at the actual implementation of the solution.
+
+%The design will describe the solution which is to be implemented, but will not target the actual implementation of the solution.
+
+%This chapter will describe the design of the turret itself as well as its hardware and software components. The hardware components are the sensors that have to detect the moving target and inform the system about which 'zone' it is in. The software components are scheduling and the Kalman filter. The scheduling is used to control the flow of the system such that certain tasks are performed within a given time frame. The Kalman filter is responsible for converting input from the sensors into instructions for the turret which it must use to track and hit the moving target. \\ \addtodo{Mathias}{Er det for tidligt at nævne de ting? De bliver forklaret kort efter}
+
+%All the components are designed such that they comply with the requirements listed in \cref{sec:requirements}.
+
 
 \input{sections/design/turret.tex}
+\input{sections/design/PID.tex}
 \input{sections/design/sensors.tex}
-\input{sections/design/rts.tex}
-\input{sections/design/scheduling.tex}
-%\input{sections/design/kalman.tex}
+\input{sections/design/des_tracking.tex}
+\input{sections/design/shooting.tex}
+%\input{sections/design/summary.tex}

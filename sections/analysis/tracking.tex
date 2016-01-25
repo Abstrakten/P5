@@ -1,6 +1,8 @@
-\section{Tracking}\label{sec:tracking}\label{\automlabel}
-Tracking a target, is closely related to detection of a target. However they differ in the amount and type of information they require. Tracking a moving target can be a very complicated procedure as there are many factors to consider. These factors can be the speed of the target, the direction of the target, the speed of the tracking device, etc.\\
+\section{Tracking}\label{sec:tracking}
+Tracking a target is closely related to detection of a target. However, tracking requires more information, than just a single position. Tracking a moving target can be a very complicated procedure as there are many factors to consider. Examples of such factors can be the speed of the target, the direction of the target, and the speed of the tracking device.\\
 
-The targets movement is obviously the greatest challenge. The target may be moving at a constant speed, but its speed can also vary. The tracking system needs to react to these changes in speed quickly to avoid losing sight of the target, especially if the target is moving at high speed. Part of this problem is removed in this project as the target will always remain at a constant speed while passing the tracking system. However, this speed may change in-between passes. The direction of the target is also a part of the challenge. The tracking system will have to determine the direction in which the target is moving to ensure it isn't moving the offensive systems of the tower away from the target. The distance to the target also plays an important role. The closer to the target the tracking system is, the shorter the time span in which the target is within its observable area is.\\
+Tracking systems often needs to react to changes in the velocity of the object being tracked. This reaction must be done to avoid losing sight of the target, especially if the target is moving at high speed. Part of this problem is removed in this project as the target will always remain at a constant speed while passing the tracking system, as described in \cref{targetdelim}. However, this speed may change with different targets. \\
 
-The act of tracking ultimately boils down to detecting movement, analysing movement, and reacting accordingly.\eal
+Tracking a target can ultimately be accomplished by detecting the target as well as analyzing and reacting to its movement.
+
+

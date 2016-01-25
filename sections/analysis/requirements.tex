@@ -1,31 +1,26 @@
-\section{Requirements}\label{sec:requirements}
-In light of the analysis, the following requirements for a turret in a tower defense game have been deduced. 
+\section{Problem Statement and Requirements}\label{sec:requirements}
+Based on the initial problem statement, and limitations made throughout the analysis, the following problem statement for a tower in a tower defense game have been deduced.
+
+\begin{center}\textit{How can an autonomous tower for a physical adaption of a tower defense game be developed, such that the tower can detect, track, and shoot targets passing by on a predetermined track?}\end{center}
+
+From this problem statement a number of requirements have been formulated in order to separate the different aspects of the problem, as to allow for a better design and evaluation of the solution. These requirements are representative for any tower included in the final game. The lack of specific requirements reflects the fact that a key point of the game is to have multiple towers with different properties, and so this list of requirements reflects the most basic type of tower. \\
 
 \begin{enumerate}
-    \item A turret must be able to detect a target.
-    \begin{enumerate}
-        \item\label{list:vis} Detection must be done visually or by motion detection
-        \item The turret must either constantly monitor the entire observable area, cover key points, or search the observable area.
-    \end{enumerate}
+    \item \label{list:vis}A tower must be able to detect a target either through optics or by motion detection.\\
     
-    \item A turret must be able to detect and analyze movement, and react accordingly.
-    \begin{enumerate}
-        \item Detection, analysis and reaction must be done faster than the movements of the target.
-    \end{enumerate}
+    \item A tower must either constantly monitor the entire observable area, cover key points, or search the observable area.\\
     
-    \item A turret must be able to predict the trajectory required to hit a target.
-    \begin{enumerate}
-        \item Prediction of trajectory, aiming and shooting a target must be done within a limited time frame.
-    \end{enumerate}
+    \item A tower must be able to detect and analyze movement.\\
+    
+    \item A tower must be able to predict the trajectory required to hit a target.\\
+    
+    \item Aiming at and shooting a target must be done within a limited time frame.\\
+    
+    \item A tower must be autonomous, meaning that it should work isolated from other systems and without user input.
 \end{enumerate}
 
-These requirements are considered the needs for any turret included in a final game. The lack of specific requirements reflect the fact that a key point of the game is to have different turrets, some which might have to shoot faster than a specific speed, and some which might require the ability to identify different targets. This list of requirements reflects the most basic type of turret. A solution to the initial problem does not necessarily have to involve all of these requirements, since some of the requirements are the byproduct of delimitations made in this project, such as requirement \ref{list:vis}. \\
+The problem statement, along with the requirements, will be the basis for the design and implementation chapters, and the foundation on which the solution will be evaluated.
 
-These requirements can be summarized into the question: \\
-
-\textit{How does one implement a program on an embedded system, such that the system can detect, track, and react to objects passing by?}\\
-
-This question, along with the requirements, will be the background for the design and implementation chapters.
 
 %A requirement might not be necessary for any solution to the initial problem, but be a byproduct of delimitations made in this project, such as requirement \ref{list:vis}.\\
 %being a a byproduct of our delimitation that a target can only be guaranteed to be detected through these methods. If the delimitation had included that a target would emit a signal, detection could have been done on that signal as well.  % Sidste sætning er forvirrende

@@ -1,0 +1,39 @@
+\chapter{Conclusion}\label{ch:conclusion}
+Based on an initial problem of developing a physical adaption of a tower defense game, an analysis further solidified the problem, which lead to the problem statement:
+
+\begin{center}\textbf{\textit{How can an autonomous turret for a physical adaption of a tower defense game be developed, such that the tower can detect, track, and shoot targets passing by on a predetermined track?}}\end{center}
+
+The constructed turret partially solves the problem statement as it is capable of detecting, tracking and shooting passing targets, although it is not fully autonomous as it needs to be set up manually. \\
+
+The problem statement was further specified in six more tangible requirements for the turret, in order to better separate different aspects of the problem. These requirements will each be evaluated in the following paragraphs. For context the turret was constructed using the LEGO Mindstorms NXT, running nxtOSEK, as platform, with two infrared sensors for detection, and servo motors for aiming and firing the turret. \\
+
+\textbf{A tower must be able to detect a target either through optics or by motion detection.} \\
+Detection is done by examining variations in measurements performed by infrared distance sensors. Testing at reasonable speeds showed that our detection system will pick up all passing targets. While the tests reported no false negative results, the turret is subject to occasional false positives, where background noise is incorrectly reported as a detected target. Additionally, the turret is not able to distinguish between different objects passing by, and interprets everything as a target. \\
+
+\textbf{A tower must either constantly monitor the entire observable area, cover key points, or search the observable area.} \\
+The turret assumes a direction of targets, and continuously measures the targets' point of entry, which is at a rightmost position. By monitoring this key point, the available reaction time for the turret is maximized. This key point is only sufficient as long as the delimitation of targets travelling counterclockwise holds. \\
+
+
+\textbf{A tower must be able to detect and analyze movement.} \\
+Detection of movement is done by comparing continuous measurements. By distinguishing between different characteristics within the sensors' readings, positions relative to the sensors are available with a margin of error. This information is analyzed by a Kalman filter, which estimates an actual position from the inaccurate sensor readings. This is not a perfect estimate and errors occur, but for the purpose of the project the estimate is more than sufficient, and given the level of inaccuracy in hardware, the errors in the results are considered an inevitability. \\
+
+
+\textbf{A tower must be able to predict the trajectory required to hit a target.} \\
+The turret applies an offset to the trajectory, causing it to aim a bit ahead of the target, depending on the predicted speed of the target and the certainty of this prediction. The turret sometimes still misses the target at higher speeds, which might be a matter of calibrating the applied offset, but could also be contributed to an incorrect estimation even before the offset was applied. However these cases are few and far between.\\
+
+%The turret continuously tracks the target after it is detected, thus it always tries to aim directly at the target. Due to a high projectile velocity, and restricted speed of the target, the turret is able to hit targets without accounting for the travel time of the projectile, at the first and second speed setting, and as such the trajectory need not be predicted in these cases. At the third speed setting, the turret had to predict the trajectory required to hit the target. It fired a few projectiles closely behind the target, but the turret was able to hit the target the majority of the time.  \\
+
+%%This requirement has not been fulfilled to a satisfactory extent. As the system analyzes the movement of the target it will also attempt to predict where it has to shoot in order to hit the target. However, it does this by predicting the location of the target itself and not the optimal location based on the trajectory of the fired projectile. Due to this the turret has problems hitting fast moving targets as they move away from the predicted location very quickly. A prediction offset could have lowered the occurrences of this problem. \\
+
+\textbf{Aiming at and shooting a target must be done within a limited time frame.} \\
+The turret uses a motor with a PID controller to aim at the target, by turning to the position predicted by the Kalman filter at the current time with the calculated offset added. The use of the PID controller ensures that the turret eventually aims accurately at the predicted position. An actual guarantee that the turret will always fire a projectile within the limited time frame cannot be be given as there are no proofs that the implemented PID controller will always reach the estimate. However, test results suggest that even if there exist cases where the estimation is not reached, there are outliers. \\
+
+%As the aim is adjusted continuously, the aiming ability of the turret is not limited by the available time period, but whether the motor can rotate to a given position fast enough, this can not be guaranteed as the Kalman filter requires a given time to find a result. \\
+
+\textbf{A tower must be autonomous, meaning that it should work isolated from other systems and without user input.} \\
+While the turret works in isolation from other systems, it does require some user interaction in order to function properly. This interaction includes positioning the turret at a certain distance from the tracks. Therefore, the requirement of an autonomous turret has only been partially fulfilled. \\
+
+\textbf{In Conclusion}\\
+In regards to the problem statement, the turret is able to detect and shoot passing targets, though, with many restrictions. The turret acts autonomously after an initial setup procedure. As such the turret partially solves the problem statement, though, it is too limited to be considered usable in complete adaption of a physical tower defense game. \\
+
+

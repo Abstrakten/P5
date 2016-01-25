@@ -1,7 +1,7 @@
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-    \begin{axis}[title=Motor Performance Test, xlabel=Power level \%, ylabel=RPM, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, legend pos=north west, legend cell align=left, xmin=10, ymin=0]
+    \begin{axis}[xlabel=Power level \%, ylabel=RPM, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, legend pos=north west, legend cell align=left, xmin=10, ymin=0]
     \addplot[yellow,line width=1pt] 
          table [x=a, y=b, col sep=comma] {sections/data/MotorData.csv};
          \addlegendentry{Motor A}
@@ -31,6 +31,6 @@
          \addlegendentry{Motor I}
 \end{axis}
 \end{tikzpicture}
-\caption{Motor test}\label{motordata}
+\caption{Motor test.}\label{motordata}
 \end{figure}
 \FloatBarrier

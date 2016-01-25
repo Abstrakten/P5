@@ -1,16 +1,11 @@
-\chapter{Analysis}\label{ch:analysis}\label{\automlabel}
+\chapter{Analysis}\label{ch:analysis}
 %Describe the purpose of the analysis chapter
-In order to create a real world implementation of tower defense, we must examine the underlying problem. There are of course many ways to create such a game, but we choose to view the targets as unintelligent, and as such trivial to implement.\\
+In order to create a physical adaptation of a tower defense game. In computer games, the towers act autonomously, and they can instantly be aware of any targets within their range. It is also trivial to aim and hit targets, which in the games is mostly done for visual appeal, and is not actually a requirement. In a physical adaptation, the towers should remain autonomous, and as such, the challenges of surveying an area for targets, aiming at, and shooting them, are more complicated. \\
 
-Then there is the matter of implementing towers. In computer games, the towers act autonomously, and they can instantly know of any targets within its range. It is also trivial to aim and hit targets, which in the games are mostly done for visual appeal, and not actually a requirement. \\
+The processes of a tower can be split into three parts: Detection, tracking, and shooting, which in turn can be divided further into sub-parts. This chapter examines the challenges that compose this problem.
 
-In a real world implementation, the towers should remain autonomous, and as such, the points of surveying an area for targets, aiming, and hitting your targets, are much more complicated. \\
-
-The processes of a tower can therefore be split into three parts: detection, tracking, shooting, which in turn can be divided further into sub-parts. This chapter examines the challenges that compose this problem. \\
-
-The target chosen for this project is a LEGO train. This was selected because it can travel along a predefined path of tracks. The speed of the train can also be adjusted and because it is made of LEGO the train can be modified to fit the needs of the project. These properties were deemed sufficient for a choice of target, since the movement of the target is not a primary concern of this project. The train is able to move with varying speed, but it will be limited to a constant speed while passing the tower. Since the project will not concern itself with the task of optimising the enjoyment of the game, we estimate that a realistic speed for a target is between 0.2 m/s and 1 m/s.\addtodo{Kasper}{er denne begrundelse for valgt hastighed tilfredsstillende}
 
 \input{sections/analysis/towerdefense.tex}
-\input{sections/analysis/registering.tex}
+\input{sections/analysis/detection.tex}
 \input{sections/analysis/tracking.tex}
 \input{sections/analysis/shooting.tex}

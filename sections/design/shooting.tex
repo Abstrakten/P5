@@ -1,0 +1,93 @@
+\section{Shooting}
+The shooting system handles the matter of aiming, which boils down to finding and adjusting to a trajectory prediction, as well as the time sensitive aspect of shooting while the aim is on target. In the design of the turret, see \cref{turret}, the physical shooting mechanism is described, which provides the frame, within which the shooting system can operate. In this section the design solutions for these problems will be explained.
+
+\subsection{Trajectory Prediction}
+When aiming, the PID controller will handle turning to the estimated position, and as such the process is reduced to finding that position, also known as the trajectory prediction.
+
+Then there is the matter of accuracy of the fired projectiles, which was considered to be good enough to not warrant consideration when aiming. This was tested by placing the turret 75 centimeters away from a circular target with a diameter of 5 centimeters. At this distance a projectile drop off of 10 centimeters was recorded. A total of 10 projectiles were fired and all of them managed to hit the target. The hits were not centered in one location, but spread about the target within the 5 centimeter boundary.
+
+In the preliminary design \cref{predesign:shoot}, the concern of compensating for the travel time and launch of the projectile, is considered to be a matter of calculating the correct offset. The correct offset will be changing along with the speed of the target, and as such the offset should be a function of the speed. However, this alone would cause the turret to offset violently during the process of finding the correct speed, as the estimated speed often varies greatly in the early iterations of the Kalman filter. This can contribute unnecessary noise to the readings, as the sensor zones closest to the center of the turret, are the most precise. \\
+
+This could be solved by applying the offset after a certain stability has occurred. However this could turn out to be too slow of a reaction, since this would cause the turret to suddenly accelerate to compensate, which in turn could result in overshooting by the PID controller and thus of the projectile. Instead the offset should be applied gradually, as the turret hones in on the target. \\
+
+This is suggested to be done by having the offset function not only be a function of the speed but also of the determinant of the $\matr{P}_k$ matrix, found in the Kalman filter. Since this determinant approaches 0 along with the Kalman filter's \enquote{certainty} of its estimate, a function similar to this could be used:
+
+\begin{equation}
+  f(speed,det(\matr{P}_k)) = \frac{speed*n}{1+e^{-k*(\frac{1}{det(\matr{P}_k)}-x0)}}
+\label{eq:logic}
+\end{equation}
+
+The function in \cref{eq:logic} is a logistic function. An example of a logistic function is shown plotted in \cref{fig:logic}. As shown on the figure the function is upper bounded, which in \cref{eq:logic} is $speed*n$. This causes the offset to be bounded based on the speed of the target. $k$ is a constant determining the steepness of the function. $x0$ is the sigmoid's midpoint which is shown as the black line in \cref{fig:logic}. This point influences when the curve should start growing with a higher steepness. In this project $x0$ is used to control when the offset should be high enough to influence the turret's position. $(1/(det(\matr{P}_k))$ is not linear, but exponential which causes the function to have a higher steepness. This increase in the steepness can be compensated for by lowering $k$. 
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}
+    \addplot[mark=none, very thick] coordinates{(9,5.5) (9,4.5)};
+    [
+        grid=major,     
+        xmin=0,
+        xmax=15,
+        axis x line=bottom,
+        ytick={5,10},
+        ymax=10,
+        axis y line=middle,
+    ]
+        \addplot%
+        [
+            blue,%
+            mark=none,
+            samples=100,
+            domain=-0:15,
+        ]
+        (x,{10/(1+2.718^(-1*(x-9)))});
+    \end{axis}
+\end{tikzpicture}
+\caption{Plot of a logistic function}
+\label{fig:logic}
+\end{figure}
+
+\subsection{Timing a Shot}
+When the system has settled on an estimate of the target's position, it will not necessarily keep the aim on point for long. This can either be due to the expected errors in the PID controller or simply since the target will eventually exit the observable area. Therefore, the launch of a shot requires timing. 
+
+\subsubsection{Cocking}
+In order to minimize the delay between reaching the desired aim and launching a projectile, the turret has a cocking function. The cocking function, which borrows its name from the act of cocking a hammer on a revolver, retracts the piston partially from the chamber, such that less motion, and therefore time, is required to reach the apex of the retraction. Optimally, cocking would bring the piston on the edge of the apex, such that it would only require a minimal amount of motion to release a shot. However, since the motors cannot be locked in position, the PID controller would be trying to stabilize them against the increasing pull of the elastic bands. This would make the cocking rather unstable and unpredictable with the current PID controller. Therefore, it was instead decided to cock at the position where the elastic bands start to exert a pull in order to achieve consistency and stability at the cost of some speed. \\
+
+Alternatively, a mechanical one way clutch combined with a non-reversing PID controller could have been used to stabilize the system at the apex \cite{clutch}.
+
+\subsubsection{Fire} 
+Firing a projectile is a rather simple process and is done by rotating the firing rods past the apex. However, since the PID controller tries to stop at the position it is given, and thus slows down when nearing its target, the fire function must provide a target well past the apex. The retained use of the PID controller is to allow for continuous fire, which is done by having the fire function rotate to the next point of cocking.
+
+% this is just the preliminary design tekst \label{predesign:shoot}
+%The last part of the preliminary design will consider trajectory prediction. The actual processes of aiming and shooting will not be covered in the preliminary since they are trivial when hardware factors are not involved, and are even then primarily implementation problems. Trajectory prediction does however deserve a mentioning. Given that the target is being tracked correctly, and thus our predictions on positions and velocity are correct, the right trajectory can be calculated given information on projectile speed and launch delays. But remembering that this process involves mechanical movement which is prone to inaccuracies (at least from a mathematical standpoint) a margin of error is expected. This includes the angle of the target relative to the turret, the width of the target, and whether the tracked point of the target is closer to the front of the target or the rear.\\
+
+
+
+
+
+
+
+
+%måske skal kalman gain bruges til offset i stedet for diskriminanten?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,15 +1,15 @@
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-    \begin{axis}[title=Stationary mode - 1 infrared sensor, xlabel=Time in ms, ylabel=Distance in cm / Rev in degrees (motor), legend cell align=left, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, xmin=0]
+    \begin{axis}[xlabel=Time in ms, ylabel=Distance in cm / Rot in degrees (motor), legend cell align=left, ymajorgrids=true, grid style=dashed, width=14cm, height=9cm, domain=0, xmin=0]
     \addplot[blue,line width=1pt] 
-         table [x=a, y=c, col sep=comma] {sections/data/data-1stationary.csv};
-         \addlegendentry{Sensor 1}
+         table [x=a, y=c, col sep=comma] {sections/data/infsens-1stat.csv};
+         \addlegendentry{Sensor}
     \addplot[red,line width=1pt] 
-         table [x=a, y=b, col sep=comma] {sections/data/data-1stationary.csv};
+         table [x=a, y=b, col sep=comma] {sections/data/infsens-1stat.csv};
          \addlegendentry{Motor}
 \end{axis}
 \end{tikzpicture}
-\caption{Test with 1 infrared sensor in stationary mode}\label{1diststat}
+\caption{Test with the faulty sensor in stationary mode.}\label{1diststat}
 \end{figure}
 \FloatBarrier

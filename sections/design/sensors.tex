@@ -1,16 +1,30 @@
-\section{Sensors}\label{sec:dessensor}
-The medium range infrared sensors are of the wide-angle type. At the tested distance of 45 centimeters they each have a field of view with a width of approximately 10 centimeters. The sensor readings are not entirely consistent throughout their field of view. There may be a large difference in the measured distance while the target is within this area. 
-%To circumvent this issue the field of view of the sensor is split up into 4 zones as seen on \cref{sensorsections2} where each of the black bars represents an infrared sensor. These zones are based on the fact that the sensors consistently return bad distance readings at specific intervals. 
+\section{Detection}\label{sec:dessensor}
+In \cref{bestchoice} the ultra sonic sensors were strongly discouraged due to interference. This leaves the infrared distance sensors as the remaining option, in light of this, the design will only consider infrared motion detection. \\
+
+As written in \cref{cone} the sensors have faulty measurements in certain areas of their fields of view. The sensors' faulty measurements can be used to determine in which of three different areas of the field of view the target was detected in. \\
+
+The areas, shown in \cref{sensorsections2}, are determined by the distance reading. First, any reading above 700 millimeters is considered noise, and is disregarded. If a reading occurs between 700 millimeters and 300 millimeters, the target is in one of the outer areas, denoted on \cref{sensorsections2} as O. If a reading is below 300 millimeters, it is in the inner zone, denoted by I. This, however, limits the turret to be placed at a specific distance from the tracks as the readings change with the distance.
 
 \input{sections/graphs/sensorsections2.tex}
 
-In \cref{sensorsections2} it is showed how the sensors field of view is split. A sensor is one of the black boxes with its field of view pointing upwards, the field of view is split up into 3 areas, the \textit{1} on both sides of a \textit{2} is seen as the same according to the sensors. However this can be used as an advantage that these fields exists. Through logic there can be made a difference between the \textit{1} on both sides of a \textit{2}. This will be used to split a sensors field of view into 3 different areas, this will help with tracking the target more precisely. It is then possible to see the train in three areas of a single sensor and to know when the train is between to sensors as shown on \Cref{sensorsections2} which will indicate that the train is in the middle.
+As the motors rotation is specified in degrees, the zones should also be interpreted as an offset in degrees. Interpreting the zones into offsets is met by two challenges. The first challenge is to translate the zones into offsets. The offset of each area was found by measuring the distance from the rotation point of the turret to the train tracks and then measuring the offset of the train as it just shifted to a new area. Then the inverse tangent was used to calculate the offset, measured in degrees, of each area, which can be seen in \cref{areas}. The areas listed in the table can be seen in figure \cref{sensarea1}. The distance from the turret to the track was 470 millimeters, as this put the sensors in their optimal position.
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{Area}   & -2     & -1    & 0    & 1    & 2     \\ \hline
+\textbf{Degrees} & 17.37 & 7.52 & -1.058 & -9.78 & -20.74 \\ \hline
+\end{tabular}
+\caption{Sensor areas.}
+\label{areas}
+\end{table}
 
-%The \textit{1} and \textit{2} is how the sensors split, the \textit{0} shows that when it is inside both sensors field of view the train is in the middle. The \textit{-1} and \textit{1} farthest from the middle and closest to the middle is the same as far as the sensor goes. Using the sensors like this will result in a lot of faulty data. There for the decision was made to make the \textit{-1} and \textit{1} farthest from the middle count as a separate area which is 3. By doing this each of the sensors field of view is split into 3 different areas and it is easier to tell more precisely where the train is when moving past the sensors field of view. The \textit{0} is part of area \textit{1} next to it.     \\
+The second challenge is to determine which of the outer zones the target was spotted in. At the highest tested speed, the target travelled 63.3 degrees per second. Since the inner zone is 11.19 degrees, the target will pass through the zone in 177 milliseconds. Since the sensors are polled at speeds as low as 6 milliseconds, see \cref{pollingrate}, a target will not pass by the inner zone without being spotted. Therefore, any reading in an outer zone, which is not immediately preceded by its corresponding inner zone, is considered to be the outermost of the outer zones, unless the other sensor has already spotted the target. A reading in zone 0, the smallest zone, requires a polling time below 42 milliseconds. \\
 
+This gives the combined field of view illustrated in \cref{sensarea1}. Since the outermost outer zones were small areas, they were considered an extension of the inner zone. The inner zones are labelled $-2$ and $2$, the innermost outer zones are labelled $-1$ and $1$, with negative numbers for left side and positive for right side. If the target is spotted in both zone $-1$ and $1$, it is instead read as being in zone $0$, which indicates that the train is in the middle of the combined field of view of the two sensors.
 
-%\Cref{sensorsections2} shows the sensors cone. It shows that a infrared sensor has 2 degrees it spots the target in. One of the problems is that on both sides of middle of the sensor it spots the target the same way. This is showed on graph \addtodo{Alex}{add graph to appendix and reference it graph of sensor readings for infrared} and is also depicted in \Cref{sensorsections2} by the 1 and -1 on both sides of 2 and -2. There are 2 sensors on the figure, the 1 and -1 furthest from the middle is handle like the 2 and -2 next to it. By using the sensors this way the train can be spotted in 5 different degrees, which are -2, -1, 0, 1, 2. This way the precision of where the train actually is compared to the sensors is increased. 
+\input{sections/graphs/sensorsections1.tex}
 
-% Bad data consistently, used to split it into 'zones'
-% Distance reading used to determine position
+\paragraph{Resting Policy} ~\\
+In \cref{sec:requirements}, the second requirement concerns ways the turret can find a target in the observable area. As the setup consists of the two infrared sensors, observing the entire observable area at once is not possible. In the setup the target will always come from one direction and as such searching the entire area is not an optimal solution. Given the counterclockwise rotation, making the turret rest at the rightmost position is the best choice for a key point, as this ensures that the target is spotted at the time it enters the observable area.

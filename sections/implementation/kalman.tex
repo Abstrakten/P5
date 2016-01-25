@@ -1,1 +1,101 @@
-\section{Kalman Filter}
+\section{Kalman Filter} \label{imp:kalman}
+The matrices and vectors used in the Kalman filter are stored as two-dimensional arrays of type \emph{double}. The state vector, its covariance matrix, and the state transition matrix are shown in \cref{lst:kalman_matrices}. Compared to the values specified in \cref{eq:initial_state}, the initial position has been set to -42, and the initial speed set to 50. The change in the initial position is to prevent the Kalman filter from estimating a very low speed, which might happen due to the high polling rate of the sensors. This can lead to the target being observed in the same zone several times before the turret starts rotating, which is interpreted by the Kalman filter as the target standing still. Therefore, the filter starts lowering the expected speed until the target enters the next sensor zone, or the turret starts rotating, while still measuring the target in the same sensor zone. The end result of this is a position estimate that is a little lower than the actual position, and this error only very slowly corrects, as shown on \cref{kalman20}. With the initial value lowered to -42, a number that was found through manual testing, the initial same-zone readings will be counter-weighted. This can be seen in \cref{kalman42}, where the prediction between 700 milliseconds and 1200 milliseconds is much closer to the measurements, compared to \cref{kalman20}.
+
+\input{sections/graphs/Kalman20.tex}
+\input{sections/graphs/Kalman42.tex}
+
+\begin{lstlisting}[style=customc, label={lst:kalman_matrices}, caption={Matrices used in the Kalman filter.}]
+// Global variables
+...
+double x[2][1] = {{-42.0}, {50.0}};
+double P[2][2] = {{0.42, 0.0}, {0.0, 30.0}};
+U32 last = 0;
+...
+
+void kalman(double zn){
+    /* Constants and matrices used for kalman calculations */
+    ...
+    U32 current = systick_get_ms();
+    double t = (last == 0) ? 0.01 : (double)(current - last) / 1000.0;
+    last = current;
+    double H[1][2] = {{1.0, 0.0}};
+    double F[2][2] = {{1.0, t}, {0.0, 1.0}};
+    double K[2][1] = {{0.0}, {0.0}};
+    ...
+}
+\end{lstlisting}
+
+The state covariance matrix, and the state transition matrix are implemented as seen in equations \ref{eq:state_trans_matrix} and \ref{eq:initial_covariance} on line 2 and 4, respectively. The time between iterations, $\Delta t$, is calculated in seconds on line 3, where the first iteration sets the time as 10 milliseconds. \\
+
+The equations for the Kalman filter use several different matrix operations, but as these operations follow the same structure, they will not be explained in detail individually, but the general structure is explained based on the function for matrix multiplication shown in \cref{matrix_mult}.
+
+\begin{lstlisting}[style=customc, label={matrix_mult}, caption={The matrix multiplication function}]
+U8 matrixMultiply(U8 rowsA, U8 colsA, U8 rowsB, U8 colsB, double a[rowsA][colsA], double b[rowsB][colsB], double out[rowsA][colsB])
+{
+	if(colsA != rowsB)
+		return -1;
+
+	double tempA[rowsA][colsA];
+	double tempB[rowsB][colsB];
+	matrixCopy(rowsA, colsA, a, tempA);
+	matrixCopy(rowsB, colsB, b, tempB);
+	double sum = 0;
+	U8 i, j, k;
+	for(i = 0; i < rowsA; i++){
+		for(j = 0; j < colsB; j++){
+			for(k = 0; k < colsA; k++){
+				sum += tempA[i][k]*tempB[k][j];
+			}
+			out[i][j] = sum;
+			sum = 0;
+		}
+	}
+	return 1;
+}
+\end{lstlisting}
+
+The first four parameters are the sizes of the two matrices, the next two parameters are the operands, with a return matrix as the last parameter. The two operands are copied into two temporary arrays, which are then used in the computation. By doing this, it is possible to save the results of an operation in one of the given operands, with no risk of overriding information. \\
+
+The predict part of the Kalman filter, \cref{eq:reduced_predict_state,eq:reduced_predict_covariance}, are implemented as seen in \cref{kalman_predict}.
+
+\begin{lstlisting}[style=customc ,label={kalman_predict}, caption={The predict step of the kalman filter}]
+void kalman(double zn){
+
+    ...
+    // Predict the current state
+	matrixMultiply(2,2,2,1, a, x, x);
+	
+	// Predict the covariance in the current state
+	matrixMultiply(2,2,2,2, a, P, P);
+	matrixMultiply(2,2,2,2, P, aT, P);
+    ...
+}
+\end{lstlisting}
+
+\Cref{kalman_update} shows the update step of the Kalman filter, using some temporary variables for intermediate calculations. The multiplication on line 5 results in a 1-by-1 matrix, here saved in \emph{temp2}, which is also saved as a scalar in the \emph{temp2v} variable of type \emph{double}. 
+
+\begin{lstlisting}[style=customc, label={kalman_update}, caption={The update step of the kalman filter}]
+void kalman(double zn){
+    ...
+    /* Calculate kalman gain */
+    matrixMultiply(1, 2, 2, 2, h, P, temp);
+    matrixMultiply(1, 2, 2, 1, temp, hT, temp2);
+    temp2v += R;
+    temp2v = 1.0 / temp2v;
+    matrixMultiply(2, 2, 2, 1, P, hT, K);
+    matrixScale(2, 1, K, temp2v, K);
+
+    /* Update state estimate */
+    matrixMultiply(1, 2, 2, 1, h, x, temp2);
+    zn -= temp2v;
+    matrixScale(2, 1, K, zn, y);
+    matrixAdd(2, 1, x, y, x);
+
+    /* Update state covariance */
+    matrixMultiply(2, 1, 1, 2, K, h, temp3);
+    matrixSubtract(2, 2, I, temp3, temp3);
+    matrixMultiply(2, 2, 2, 2, temp3, P, P);
+    ...
+}
+\end{lstlisting}
+

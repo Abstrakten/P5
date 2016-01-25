@@ -1,71 +1,37 @@
-\section{Platform}\label{sec:platform}\label{\automlabel}
+\section{Platform}\label{sec:platform}
+The tower can be developed with one of several different platforms. Generally Aalborg University provides three relevant platform choices, namely Arduino Uno, LEGO Mindstorms NXT and Raspberry Pi. The specifications of these three platforms are shown in \cref{tab:hardware_specs}.
 
-%%% Motivation for analyzing platforms, and criteria for evaluation
-The turret can be developed with one of several different platforms acting as the base. Aalborg university provides three primary choices for platform, namely Arduino Uno, Lego Mindstorms NXT, and Raspberry Pi. The specifactions of these platforms is shown in table~\ref{tab:hardware_specs}.
+\input{sections/tables/platformspecs.tex}
+\medskip
 
-\begin{table}[]
-\centering
-\resizebox{\textwidth}{!}{%
-	\begin{tabular}{|l|l|l|l|}
-	\hline
-	\textbf{Platform}        & \textbf{Arduino Uno~\cite{arduino_uno}}	& \textbf{Lego Mindstorms NXT} 	& \textbf{Raspberry Pi 1 model A} \\ \hline
-	\textbf{CPU clock speed} & 16 MHz					& 48 MHz						& 700 MHz                         \\ \hline
-	\textbf{Flash memory}    & 32 KB 					& 256 KB 						& SD card support                 \\ \hline
-	\textbf{RAM}             & 2 KB SRAM 				& 64 KB RAM 					& 256 MB SDRAM                    \\ \hline
-	\textbf{Ports}           & \begin{tabular}[c]{@{}l@{}}14 digital I/O pins \\ 6 analog input pins \end{tabular} 
-							 & \begin{tabular}[c]{@{}l@{}}4 input ports \\ 3 output ports 			 \end{tabular}
-							 & 8 I/O ports                     															  \\ \hline
-	\textbf{Other}           & N/A 						
-	 						 & \begin{tabular}[c]{@{}l@{}}Separate microcontroller for I/O \\ Bluetooth support \end{tabular} 
-	 						 & 250 MHz GPU                     															  \\ \hline
-	\end{tabular}
-}
-\caption{Hardware specifications for available platforms.}
-\label{tab:hardware_specs}
-\end{table}
+\subsection{Platform Evaluation}
+When selecting a suitable platform for the project, there are several different criteria that must be taken into account. Four criteria have been identified, which will be used for evaluating the suitability of the three available platforms for this project. While all four criteria are important for the project, some will have a larger impact than others. Therefore the criteria will be prioritized based on their importance. The priorities are based primarily on a desire to keep focus on the software, without heavily limiting possible solutions. The criteria are listed in order of most important to least important. \\
 
+\textbf{Ease of constructing the tower:} The focus in this project is the software aspect of the embedded system, and making use of sensors and actuators to interact with the physical surroundings, thus the construction of the tower itself is outside the main scope of the project. Having a platform that affords an easy construction of the tower is therefore important for the project, as it allows the focus to be kept on the software. \\
 
+\textbf{Compatibility with sensors and actuators:} The platform must support input from sensors to observe the environment, and output to actuators to act on these observations. Therefore the platform must be compatible with sensors and actuators. This criteria also concerns the ease of which sensors and actuators can be connected to the platform. This is important due to the prospect of having to test different sensors and actuators, and possibly having to modify the sensors and actuators beforehand might prove very time consuming. \\
 
+\textbf{Range of available sensors and actuators:} There exists many different types of sensors and actuators, each with their own strengths and weaknesses, suitable for a project solution. A platform with a large range of available sensors and actuators is more desirable, since it increases the amount of possible solutions. \\
 
-\subsection{Raspberry Pi}\label{raspberry}
-The Raspberry Pi is a small single-board computer. The hardware specifications of the Raspberry Pi 1 model A are as follows:
+\textbf{Computation power:} The computational power of the platform will also be taken into consideration, as higher computation power might increase both the range of possible software design options, and the range of sensors available, such as cameras. 
 
-\begin{itemize}
-  \item ARM1176JZF-S CPU with a 700 MHz clock speed.
-  \item Broadcom VideoCore IV GPU with a 250 MHz clock speed.
-  \item 256 MB SDRAM
-  \item 8 general purpose I/O ports (17 GPIO ports on the A+ model).
-\end{itemize}
+%\input{sections/tables/criteriaimportance.tex}
 
-Though the physical measurements of the unit are small, the Raspberry Pi is still a rather powerful board. For the purpose of the embedded system in this project, this amount of computational power is not needed. Additionally, hardware modifications are needed for incorporating the board with the available sensors and actuators. 
+\subsubsection{Arduino Uno}
+A large range of both sensors and actuators are available for the Arduino Uno, though the hardware sometimes has to be customized for the intended use. The Arduino Uno is the least powerful platform of the three with respect to computational power, flash memory and RAM. It is possible to construct a completely customized tower for the Arduino Uno, however, this also increases the difficulty of the construction as many parts have to be custom made, making the process very hardware oriented. 
 
-\subsection{Arduino Uno}\label{arduino}
-The Arduino Uno is a microcontroller board. It is a popular choice for use in embedded systems, primarily due to its low cost and easy accessibility as well as the amount of accessories available for the device. The Arduino Uno hardware has the following specifications:
+\subsubsection{Raspberry Pi}
+%Raspberry Pi 1 model A
+The Raspberry Pi has the highest computational power of the three platforms. It has the same problem as the Arduino Uno with regards to tower construction as it may also require custom hardware components. The availability and compatibility of sensors and actuators is another problem for the Raspberry Pi. The Raspberry Pi only excels in terms of computational power compared to the two other platforms.
 
-\begin{itemize}
-  \item ATmega328P microcontroller with 16 MHz clock speed.
-  \item 32 KB flash memory.
-  \item 2 KB SRAM.
-  \item 14 digital I/O pins.
-  \item 6 analog input pins.
-\end{itemize}
+\subsubsection{LEGO Mindstorms NXT}
+%NXT
+The selection of available sensors and actuators for the LEGO NXT is reasonable. The NXT has a high compatibility level with these components as they can be connected with a cable, as opposed to wires. The computational power of the NXT lies between that of the other two platforms, which means its not as limited as the Arduino Uno when it comes software options, but it falls behind the Raspberry Pi. The LEGO NXT excels in tower construction as it is a platform produced by LEGO which means its compatible with all LEGO bricks and components.
 
-While the hardware resources on this platform are heavily limited, it should be capable of performing the necessary calculations, otherwise these can be offloaded to another system. A rather important disadvantage of using Arduino Uno is the fact that sensors and actuators have to be built and/or modified to be able to function properly with the device. 
+\subsection{Final Choice of Platform}\label{platchoice}
+The Raspberry Pi is not a suitable platform for this project, due to its limitations in regards to availability and compatibility of sensors and actuators. The Arduino Uno could have been a good platform choice, but the possible time consuming construction of a tower, as well as the relatively limited computational power, is seen as a too severe limitation. \\
 
-\subsection{Lego NXT}\label{legonxt}
-Another available platform is the LEGO NXT. This platform is considered a good option due to the large selection of available sensors and actuators compatible with the platform, and the "plug and play" nature of the platform. The hardware in the NXT is as follows:
+The LEGO NXT does not have any severely restricting limitations for this project, and has a large advantage in the ease of constructing the tower. This is seen as being very important for this project, as it allows the focus to be kept on the embedded software. The final choice of platform for this project will therefore be the LEGO Mindstorms NXT. \\
 
-\begin{itemize}
-  \item 32-bit ARM7TDMI core.
-  \item 256KB of FLASH memory.
-  \item 64KB of RAM.
-  \item 8-bit Atmel ATmega48 microcontroller.
-  \item Bluetooth support.
-  \item 3 output ports.
-  \item 4 input ports.
-\end{itemize}
+The choice of the LEGO NXT platform does, however, exclude the option of using image recognition for tracking, as the process of acquiring and processing pictures with a high frequency can be very taxing on the system, in regards to both memory and computational power. Due to the limited specifications of the NXT, using image recognition would require the storage and processing of images to be offloaded to another system with higher performance, which would then communicate the results back to the NXT. Since this conflicts with the requirement in \cref{sec:requirements} that the tower should be autonomous, using image recognition to detect targets is discarded in favor of the less taxing motion detection options.
 
-The LEGO NXT allows compatible sensors and actuators to be connected by the means of a cable which moves the focus to the software aspect as there is no need to modify the hardware.
-
-\subsection{Platform Selection}
-The Raspberry Pi is too powerful a board for this project and will not be selected. The Arduino Uno could be used for the project, however, it has not been selected as it would shift the focus towards the hardware due to the fact that a lot of the hardware for the Arduino Uno needs to be assembled beforehand. The LEGO NXT complies with the requirements for this project. It is more powerful than the Arduino Uno while the Raspberry Pi is stronger. The LEGO NXT is naturally compatible with LEGO parts making it easy to construct turrets that can house the platform. This would also make it easier to construct different turret types in the future. 
